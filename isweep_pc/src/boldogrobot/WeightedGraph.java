@@ -75,14 +75,23 @@ public class WeightedGraph {
 		t.setLabel(4, "v4");
 		t.setLabel(5, "v5");
 		t.addEdge(0, 1, 2);
+		t.addEdge(1, 0, 2);
 		t.addEdge(0, 5, 9);
+		t.addEdge(5, 0, 9);
 		t.addEdge(1, 2, 8);
+		t.addEdge(2, 1, 8);
 		t.addEdge(1, 3, 15);
+		t.addEdge(3, 1, 15);
 		t.addEdge(1, 5, 6);
+		t.addEdge(5, 1, 6);
 		t.addEdge(2, 3, 1);
+		t.addEdge(3, 2, 1);
 		t.addEdge(4, 3, 3);
+		t.addEdge(3, 4, 3);
 		t.addEdge(4, 2, 7);
+		t.addEdge(2, 4, 7);
 		t.addEdge(5, 4, 3);
+		t.addEdge(4, 5, 3);
 		t.print();
 
 		final int[] pred = Dijkstra.dijkstra(t, 0);
