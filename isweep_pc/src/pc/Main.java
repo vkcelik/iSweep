@@ -1,11 +1,12 @@
 package pc;
+import interfaces.ImageAnalyzerIntf;
+
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -14,15 +15,25 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 
-public class Main {
+import boldogrobot.Ball;
+
+
+
+public class Main implements ImageAnalyzerIntf{
+	
+	static int FRAME_HEIGHT = 480;
+	static int FRAME_WIDTH = 640;
+	int MAX_NUM_OBJECTS=1;
+	//minimum and maximum object area
+	int MIN_OBJECT_AREA = 20*20;
+	int MAX_OBJECT_AREA = (int)(FRAME_HEIGHT*FRAME_WIDTH/1.5);
+	
 	private static Treshhold gui;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		EventQueue.invokeLater(new Runnable() {
@@ -49,6 +60,8 @@ public class Main {
 		window2.setVisible(true);
 
 		VideoCapture webSource = new VideoCapture(1);
+//		webSource.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
+//		webSource.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 		Thread.sleep(2000);
 
 		if (!webSource.isOpened()) {
@@ -105,13 +118,23 @@ public class Main {
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Mat hierarchy = new Mat();
 		Imgproc.findContours(temp, contours, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
-
-		for(int i=0; i< contours.size();i++){
-	        System.out.println(Imgproc.contourArea(contours.get(i)));
-	        if (Imgproc.contourArea(contours.get(i)) > 50 ){
-	            Rect rect = Imgproc.boundingRect(contours.get(i));
-	            System.out.println(rect.x + ", " + rect.y);
-	        }
+		double refArea = 0;
+		boolean objectFound = false;
+		if (hierarchy.size().width > 0) {
+			double numObjects = hierarchy.size().width;
+			
+//		for(int i=0; i< contours.size();i++){
+//	        System.out.println(Imgproc.contourArea(contours.get(i)));
+//	        if (Imgproc.contourArea(contours.get(i)) > 50 ){
+//	            Rect rect = Imgproc.boundingRect(contours.get(i));
+//	            System.out.println(rect.x + ", " + rect.y);
+//	        }
 	    }
+	}
+
+	@Override
+	public List<Ball> getBalls() {
+		List<Ball> balls = new ArrayList<Ball>();
+		return balls;
 	}
 }

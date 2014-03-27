@@ -1,9 +1,6 @@
 package boldogrobot;
 
 public class Goal {
-	
-String  goal1;
-String goal2;
-
-
+	String  goal1;
+	String goal2;
 }
