@@ -26,7 +26,6 @@ import boldogrobot.Ball;
 
 
 public class Main implements ImageAnalyzerIntf{
-	
 	static int FRAME_HEIGHT = 480;
 	static int FRAME_WIDTH = 640;
 	int MAX_NUM_OBJECTS=1;

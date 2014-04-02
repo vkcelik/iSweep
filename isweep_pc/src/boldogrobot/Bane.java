@@ -1,7 +1,6 @@
 package boldogrobot;
 
 public class Bane {
-
 	private static final int BANE_W = 180;
 	private static final int BANE_H = 120;
 
