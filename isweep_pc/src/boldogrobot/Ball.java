@@ -8,5 +8,4 @@ public class Ball extends Placeable{
 	public void tegn(int x, int y, char symbol) {
 
 	}
-
 }

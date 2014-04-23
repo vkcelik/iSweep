@@ -58,7 +58,7 @@ public class Main implements ImageAnalyzerIntf{
 		window2.setSize(640, 360);
 		window2.setVisible(true);
 
-		VideoCapture webSource = new VideoCapture(1);
+		VideoCapture webSource = new VideoCapture(0);
 //		webSource.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
 //		webSource.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 		Thread.sleep(2000);
