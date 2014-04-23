@@ -61,6 +61,7 @@ class CircleFinder {
 		
 		return list;
 	}
+	
 
 	public static void main(String[] args) {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
