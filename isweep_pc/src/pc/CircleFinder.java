@@ -15,10 +15,9 @@ import org.opencv.imgproc.Imgproc;
 import boldogrobot.Ball;
 
 class CircleFinder {
-	int testVar = 4;
 	public List<Ball> run() throws Exception{
-		boolean loadImageFromFile = false;
-		boolean printCircleCoordinates = false;
+		boolean loadImageFromFile = true;
+		boolean printCircleCoordinates = true;
 		List<Ball> list = new ArrayList<Ball>();
 		Mat src_gray = new Mat();
 		Mat smooth = new Mat();

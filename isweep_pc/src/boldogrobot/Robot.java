@@ -9,4 +9,14 @@ public class Robot extends Placeable{
 	public Robot(int x, int y) {
 		super(x, y);
 	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	
 }
