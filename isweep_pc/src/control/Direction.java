@@ -19,5 +19,9 @@ public class Direction {
 	public String toString(){
 		return "["+elements.elementAt(0)+","+elements.elementAt(1)+"]";
 	}
+	
+	public int getElement(int numberFromTop){
+		return elements.elementAt(numberFromTop);
+	}
 		 
 }

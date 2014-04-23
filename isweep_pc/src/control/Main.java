@@ -1,6 +1,7 @@
 package control;
 
 import boldogrobot.Ball;
+import boldogrobot.Placeable;
 import boldogrobot.Robot;
 import lejos.nxt.Button;
 
@@ -9,23 +10,26 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException {
 		
 		Robot robot = new Robot(10, 10);
-		robot.setDirection(new Direction(0, 1));
-		Ball b1 = new Ball(20, 20);
-
-		int x2 = robot.getX();
-		int y2 = robot.getY(); 
-		int x1 = b1.getX();
-		int y1 = b1.getY();
+		robot.setBack(new Placeable(5, 10));
+		robot.setDirection(new Direction(robot.getX()-robot.getBack().getX(),robot.getY()-robot.getBack().getY()));
+		System.out.println(robot.getDirection());
 		
-		Direction d = new Direction(x2 - x1, y2 - y1);
-
-		double vinkel = (x2 * y2 + x1 * y1)
-				/ ((Math.sqrt(Math.pow(x2, 2) + (Math.pow(x1, 2))) * (Math
-						.sqrt(Math.pow(y2, 2) + (Math.pow(y1, 2))))));
+		Ball b1 = new Ball(20, 20);
+		
+		Direction d = new Direction(b1.getX() - robot.getX(), b1.getY() - robot.getY());
+		System.out.println(d);
+		
+		int robote0 = robot.getDirection().getElement(0);
+		int robote1 = robot.getDirection().getElement(1);
+		int toBalle0 = d.getElement(0);
+		int toBalle1 = d.getElement(1);
+		
+		double vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
+				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
+						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
 		
 		System.out.println(Math.toDegrees(Math.acos(vinkel)));
 
-		System.out.println(d);
 
 //		Movement m = new Movement();
 
