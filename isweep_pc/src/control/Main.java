@@ -30,6 +30,11 @@ public class Main {
 		
 		System.out.println(Math.toDegrees(Math.acos(vinkel)));
 
+			int L_side_PX=0, L_side_MM=0;
+			float pixelpermm = (float)L_side_PX/L_side_MM;
+			double distance_mm = robot.getDistance(b1)/pixelpermm;
+		
+		System.out.println(distance_mm);
 
 //		Movement m = new Movement();
 
