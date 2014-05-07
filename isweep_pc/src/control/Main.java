@@ -27,6 +27,8 @@ public class Main {
 				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
 						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
 		
+		
+		
 		Movement m = new Movement();
 		m.turnDirection((int)vinkel);
 		
