@@ -88,7 +88,7 @@ public class JavaCVTesting {
         Imgproc.dilate(dest, dest, dilate);
         Imgproc.dilate(dest, dest, dilate);
 
-        List<MatOfPoint> contours = new ArrayList<>();
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
         Imgproc.findContours(dest, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         Imgproc.drawContours(dest, contours, -1, new Scalar(255,255,0));
