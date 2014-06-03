@@ -1,12 +1,10 @@
 package interfaces;
 
-import java.util.List;
-
-import boldogrobot.Ball;
+import java.util.ArrayList;
 
 public interface PathFinderIntf {
 
-	public List<Ball> getShortestPath();
+	public ArrayList<Integer> getShortestPath(int[][] graph);
 	
 }
 
