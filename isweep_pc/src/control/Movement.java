@@ -5,12 +5,11 @@ import lejos.nxt.Motor;
 public class Movement {
 	
 	double convert = 512.0/180.0;
-	double mm_to_wheeldegress_constant = 2.0845396641574985524030110017371;
+	
 
 	void move(int millimeter){
-		int degressToTurnWheel = (int)(millimeter*mm_to_wheeldegress_constant);
-		Motor.A.rotate(degressToTurnWheel,true); 
-		Motor.B.rotate(degressToTurnWheel,false);
+		Motor.A.rotate(600,true); 
+		Motor.B.rotate(600,false);
 	}
 	
 	void armCollect(){
