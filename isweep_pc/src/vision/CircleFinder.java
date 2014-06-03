@@ -1,4 +1,4 @@
-package pc;
+package vision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,23 +15,25 @@ import org.opencv.imgproc.Imgproc;
 import boldogrobot.Ball;
 
 class CircleFinder {
+	
+	Mat src = new Mat();
+	
 	public List<Ball> run() throws Exception{
-		boolean loadImageFromFile = true;
+//		boolean loadImageFromFile = true;
 		boolean printCircleCoordinates = true;
 		List<Ball> list = new ArrayList<Ball>();
 		Mat src_gray = new Mat();
 		Mat smooth = new Mat();
 		Mat circles = new Mat();
-		Mat src = new Mat(); 
 		
-		if(loadImageFromFile){
-			src = Highgui.imread("ball.jpg",1);
-		} else {
-			// load frame (image) from webcam
-			VideoCapture webSource = new VideoCapture(1);
-			Thread.sleep(2000);
-			webSource.retrieve(src);
-		}
+//		if(loadImageFromFile){
+//			src = Highgui.imread("ball.jpg",1);
+//		} else {
+//			// load frame (image) from webcam
+//			VideoCapture webSource = new VideoCapture(1);
+//			Thread.sleep(2000);
+//			webSource.retrieve(src);
+//		}
 
 		Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.GaussianBlur(src_gray, smooth, new Size(23,23), 4, 4);
@@ -62,13 +64,8 @@ class CircleFinder {
 		return list;
 	}
 	
-
-	public static void main(String[] args) {
-		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
-		try {
-			new CircleFinder().run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public CircleFinder(Mat image) {
+		this.src = image;
 	}
+
 }

@@ -1,4 +1,4 @@
-package pc;
+package vision;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 
-public class ImageAnalyzer {
+public class WebcamOnce {
     public static void main(String[] args) {
     	int h_min = 100;
     	int h_max = 200;

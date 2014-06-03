@@ -1,4 +1,4 @@
-package pc;
+package vision;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -24,7 +24,7 @@ import org.opencv.imgproc.Imgproc;
 
 import boldogrobot.Ball;
 
-class Webcam {
+class WebcamContinous {
 
 
 	public List<Ball> run() throws Exception{
@@ -106,12 +106,12 @@ class Webcam {
 		return list;
 	}
 
-	public static void main(String[] args) {
-		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
-		try {
-			new CircleFinder().run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
+//		try {
+//			new CircleFinder().run();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

@@ -1,4 +1,4 @@
-package pc;
+package vision;
 import interfaces.ImageAnalyzerIntf;
 
 import java.awt.EventQueue;

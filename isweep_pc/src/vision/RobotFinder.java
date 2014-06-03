@@ -1,4 +1,4 @@
-package pc;
+package vision;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
