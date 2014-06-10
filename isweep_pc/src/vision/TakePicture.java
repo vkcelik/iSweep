@@ -36,8 +36,8 @@ public class TakePicture {
 		Mat frame = new Mat();
 		vc.read(frame);
 
-		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 2304.0));
-		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1536.0));
+		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920.0));
+		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080.0));
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
