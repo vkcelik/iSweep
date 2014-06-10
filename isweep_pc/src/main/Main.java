@@ -41,10 +41,10 @@ public class Main {
 //		}
 		
 		// TAKE PICTURE
-		// Find koordinaterne på hvor vægene mødes (inderside).
-		// Find længderne på vægene i pixels 
-		// For hver væg: divider længden i pixels med hvor langt de er i virkeligheden og omvendt
-		// Find gennemsnittet af de 2 talsæt
+		// Find koordinaterne pï¿½ hvor vï¿½gene mï¿½des (inderside).
+		// Find lï¿½ngderne pï¿½ vï¿½gene i pixels 
+		// For hver vï¿½g: divider lï¿½ngden i pixels med hvor langt de er i virkeligheden og omvendt
+		// Find gennemsnittet af de 2 talsï¿½t
 		
 		
 		Ball ball = new Ball(2100, 100);
@@ -77,7 +77,7 @@ public class Main {
 		System.out.println(vinkel_grader);
 
 		// TAKE PICTURE
-		// Robot front og bagende(måske) har nu ændret position fordi vi har drejet
+		// Robot front og bagende(mï¿½ske) har nu ï¿½ndret position fordi vi har drejet
 		
 		robot.setX(100);
 		robot.setY(100);
@@ -112,13 +112,14 @@ public class Main {
 				// FIND ROBOTTENS FRONT OG BAGENDE
 				// HVIS FRONTEN AFVIGER MERE END 10 MM
 					// STOP
-					// DREJ ROBOTTEN MOD MÅLET
-					// MOVE TILBAGEVÆRENDE DISTANCE 
+					// DREJ ROBOTTEN MOD Mï¿½LET
+					// MOVE TILBAGEVï¿½RENDE DISTANCE 
+				int afvigelse = 0;
 				if (afvigelse > 10){
 					m.stop();
 					
 					break;
-				} else if (/*DISTANCE TIL MÅL ER MINDRE END 2 MM*/){
+				} else /*DISTANCE TIL Mï¿½L ER MINDRE END 2 MM*/{
 					haveArrived = true;
 				}
 			}
