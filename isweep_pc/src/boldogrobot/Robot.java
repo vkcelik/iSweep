@@ -18,6 +18,10 @@ public class Robot extends Placeable{
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
+	
+	public void updateDirection(){
+		direction = new Direction(this.getX()-back.getX(),this.getY()-back.getY());
+	}
 
 	public Placeable getBack() {
 		return back;
