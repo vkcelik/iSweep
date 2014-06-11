@@ -70,7 +70,7 @@ public class Main implements ImageAnalyzerIntf{
 		}
 
 //		Mat frame = new Mat();
-		Mat frame =  Highgui.imread("robot.jpg",1);
+		Mat frame =  Highgui.imread("picture 12.jpg",1);
 		Mat hsv = new Mat();
 		Mat filtered = new Mat();
 		MatOfByte mem = new MatOfByte();
@@ -85,7 +85,7 @@ public class Main implements ImageAnalyzerIntf{
 				
 				Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_BGR2HSV);
 				Core.inRange(hsv, new Scalar(gui.getH_MIN(), gui.getS_MIN(), gui.getV_MIN()), new Scalar(gui.getH_MAX(), gui.getS_MAX(), gui.getV_MAX()), filtered);
-				morphOps(filtered);
+//				morphOps(filtered);
 				trackFilteredObject(filtered);
 				
 				Highgui.imencode(".png", filtered, mem2);

@@ -22,7 +22,7 @@ public class Movement {
 	
 	public void armHold(){
 		Motor.C.setSpeed(30);
-		Motor.C.rotateTo(70);
+		Motor.C.rotateTo(60);
 	}
 	
 	public void armThrow(){
