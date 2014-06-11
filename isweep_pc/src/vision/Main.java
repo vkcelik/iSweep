@@ -69,8 +69,8 @@ public class Main implements ImageAnalyzerIntf{
 			System.out.println("Iniciando camera");
 		}
 
-//		Mat frame = new Mat();
-		Mat frame =  Highgui.imread("robot.jpg",1);
+		Mat frame = new Mat();
+//		Mat frame =  Highgui.imread("robot.jpg",1);
 		Mat hsv = new Mat();
 		Mat filtered = new Mat();
 		MatOfByte mem = new MatOfByte();
@@ -78,7 +78,7 @@ public class Main implements ImageAnalyzerIntf{
 		
 		while(webSource.grab()){
 			try{
-//				webSource.retrieve(frame);
+				webSource.retrieve(frame);
 				Highgui.imencode(".png", frame, mem);
 				Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
 				imageViewer.updateImage(im);

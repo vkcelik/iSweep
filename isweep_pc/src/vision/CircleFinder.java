@@ -37,7 +37,8 @@ class CircleFinder {
 
 		Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.GaussianBlur(src_gray, smooth, new Size(23,23), 4, 4);
-		Imgproc.HoughCircles(smooth, circles, Imgproc.CV_HOUGH_GRADIENT, 2, 90, 40, 40, 30, 60);
+//		Imgproc.HoughCircles(smooth, circles, Imgproc.CV_HOUGH_GRADIENT, 2, 90, 40, 40, 30, 60);
+		Imgproc.HoughCircles(smooth, circles, Imgproc.CV_HOUGH_GRADIENT, 2, 26, 24, 25, 12, 17);
 
 		System.out.println("Found "+circles.cols() + " circles.");
 
@@ -72,7 +73,6 @@ class CircleFinder {
 	public CircleFinder(){
 	}
 	
-	// skal fjernes senere
 	public static void main(String[] args) throws Exception {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
 		new CircleFinder().run();
