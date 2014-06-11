@@ -12,7 +12,7 @@ public class PathFinder implements PathFinderIntf {
 		int[] path = new ShortestHamiltonianPath().getShortestHamiltonianPath(graph);
 		ArrayList<Integer> fixedPath = new ArrayList<Integer>();
 	    fixedPath.add(0);
-	    for (int i = path.length-1; i >= 1; i--) {
+	    for (int i = 1; i < path.length; i++) {
 	    	fixedPath.add(path[i]);
 		}
 		return fixedPath;
