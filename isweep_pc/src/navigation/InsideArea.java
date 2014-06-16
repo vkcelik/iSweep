@@ -25,23 +25,49 @@ public class InsideArea {
 
 		balls.add(new Ball(150,50));
 		balls.add(new Ball(375,75));
-		balls.add(new Ball(200,350));
-		
+		balls.add(new Ball(150,350));
+
 		for (Ball b: balls){
 			for(Retangle f: Omroder){
+
+				Placeable P = f.topLeft;
+				Placeable Q = f.topRight;
+				Placeable R = f.bottomLeft;
+				Placeable A = new Placeable(b.getX(), b.getY());
+
+				Vector2D PQ = new Vector2D(Q.getX()-P.getX(), Q.getY()-P.getY());
+				Vector2D PR = new Vector2D(R.getX()-P.getX(), R.getY()-P.getY());
+				Vector2D PA = new Vector2D(A.getX()-P.getX(), A.getY()-P.getY());
+
+				double d = det(PQ, PR);
 				
+				double n = -det(PA, PQ)/d;
+				double m = det(PA, PR)/d;
+
 				
+				if ((0 <= n && n <= 1) && (0 <= m && m<=1)){
+					
+					System.out.println("Ball inside");
+				}
+				else {
+					
+					System.out.println("Ball outside");
+					
+				}
 				
-				
-				
+
+
 			}
 		}
-
-
-
 	}
 
 
-
+	private double det(Vector2D a, Vector2D b){
+		return (a.x * b.y)-(b.x*a.y); 
+	}
+	
+	public static void main(String[] args) {
+		new InsideArea().run();
+	}
 
 }
