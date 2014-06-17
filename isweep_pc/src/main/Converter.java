@@ -8,7 +8,7 @@ public class Converter {
 	public double pixelToMm(double pixel, double sideLengthPixel){
 		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
 		double mmperpixel = L_side_MM/L_side_PX;
-		return (int) (pixel*mmperpixel);
+		return pixel*mmperpixel;
 	}
 	
 	public double mmToPixel(double mm, double sideLengthPixel){

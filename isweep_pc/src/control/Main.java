@@ -46,9 +46,9 @@ public class Main {
 
 		Movement m = new Movement();
 //		if(robot.getX()>b1.getX()){
-//			m.turnLeft((int)vinkel_grader);			
+//			m.turnLeft(vinkel_grader);			
 //		} else {
-//			m.turnRight((int)vinkel_grader);
+//			m.turnRight(vinkel_grader);
 //		}
 //
 //		System.out.println(vinkel_grader);
