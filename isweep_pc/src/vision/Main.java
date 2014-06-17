@@ -70,7 +70,7 @@ public class Main implements ImageAnalyzerIntf{
 		}
 
 //		Mat frame = new Mat();
-		Mat frame =  Highgui.imread("picture12new.jpg",1);
+		Mat frame =  Highgui.imread("Picture 21.jpg",1);
 		Mat hsv = new Mat();
 		Mat filtered = new Mat();
 		MatOfByte mem = new MatOfByte();

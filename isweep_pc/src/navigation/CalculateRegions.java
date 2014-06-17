@@ -32,15 +32,15 @@ public class CalculateRegions {
 
 		ArrayList<Retangle> omroder = new ArrayList<Retangle>();
 		double Bredde = 1800.0;
-		double længde = 1200.0;
+		double laengde = 1200.0;
 
 		double PA = 20.0;
 		double PD = Bredde-PA;
 
 		double a = PA/Bredde;
 		double b = (Bredde-PA)/Bredde;
-		double c = PA/længde;
-		double d = (længde-PA)/længde;
+		double c = PA/laengde;
+		double d = (laengde-PA)/laengde;
 		double e = a;
 		double f = e;
 		double g = c;
@@ -75,7 +75,7 @@ public class CalculateRegions {
 		Placeable K = new  Placeable((int)KXCORDINAT, (int)KYCORDINAT);
 
 		double scaledZRX= (R.getX()-Z.getX())*e;
-		double scaledZRY=(R.getY()-P.getY())*e;
+		double scaledZRY=(R.getY()-Z.getY())*e;
 		double LXCORDINAT = scaledZRX + Z.getX();
 		double LYCORDINAT = scaledZRY + Z.getY();
 
@@ -113,7 +113,7 @@ public class CalculateRegions {
 		double JYCORDINAT = scaledKGY + K.getY();
 
 		double scaledKG1X = (G.getX()-K.getX())*l;
-		double scaledKG1Y=(Q.getY()-K.getY())*l;
+		double scaledKG1Y=(G.getY()-K.getY())*l;
 		double HXCORDINAT = scaledKG1X + K.getX();
 		double HYCORDINAT = scaledKG1Y + K.getY();
 

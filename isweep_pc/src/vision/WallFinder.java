@@ -37,13 +37,57 @@ public class WallFinder {
 		
 		if(loadImageFromFile){
 //			src = Highgui.imread("ball.jpg",1);
-			src = Highgui.imread("Picture 4.jpg",1);
+			src = Highgui.imread("picture12new.jpg",1);
 		} else {
 			// load frame (image) from webcam
 			VideoCapture webSource = new VideoCapture(1);
 			Thread.sleep(2000);
 			webSource.retrieve(src);
 		}
+		
+		Mat srcH = new Mat();
+		src.convertTo(srcH, -1, 2.0, 0);
+		Highgui.imwrite("contrast.jpg", srcH);
+		
+		Mat img_hist_equalized = new Mat();
+		List<Mat> channels = new ArrayList<Mat>();
+		
+		Imgproc.cvtColor(srcH, img_hist_equalized, Imgproc.COLOR_BGR2YCrCb);
+		Core.split(img_hist_equalized, channels);
+		
+		Imgproc.equalizeHist(channels.get(0), channels.get(0));
+		Core.merge(channels, img_hist_equalized);
+		Imgproc.cvtColor(img_hist_equalized, img_hist_equalized, Imgproc.COLOR_YCrCb2BGR);
+		
+		Highgui.imwrite("equalized.jpg", img_hist_equalized);
+		Imgproc.cvtColor(img_hist_equalized, src_gray, Imgproc.COLOR_BGR2GRAY);
+		
+		Mat hsv = new Mat();
+		Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
+		
+		Mat filtered = new Mat();
+//		Core.inRange(hsv, new Scalar(0, 36, 30), new Scalar(11, 255, 255), filtered);
+		Core.inRange(hsv, new Scalar(0, 39, 0), new Scalar(193, 255, 255), filtered);
+		Highgui.imwrite("filtered.jpg", filtered);
+		
+		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(12,12));
+		Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(12,12));
+
+		Imgproc.erode(filtered, filtered, erodeElement);
+		
+		Imgproc.dilate(filtered, filtered, dilateElement);
+//		Imgproc.erode(filtered, filtered, erodeElement);
+
+		Highgui.imwrite("filtered2.jpg", filtered);
+		
+		Imgproc.findContours(filtered, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.drawContours(src, contours, -1, new Scalar(0, 213, 16), 2);
+		
+//		Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_BGR2GRAY);
+//		
+//		Mat imageA = new Mat();
+//		Imgproc.adaptiveThreshold(src_gray, imageA, 255, 0, 0, 51, -25);
+//		Highgui.imwrite("a.jpg", imageA);
 		
 //		Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_BGR2GRAY);
 //		Imgproc.blur(src_gray, src_gray, new Size(3,3));
@@ -75,11 +119,12 @@ public class WallFinder {
 //			System.out.println(approx.cols());
 //		}
 		
-		Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_BGR2GRAY);
-//		Imgproc.blur(src_gray, src_gray, new Size(3,3));
-		Imgproc.Canny(src_gray, canny_out, 18, 54);
-		Highgui.imwrite("canny.jpg", canny_out);
-		Imgproc.HoughLinesP(canny_out, lines, 1, Math.PI/180, 30, 400, 200);
+//		Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_BGR2GRAY);
+////		Imgproc.blur(src_gray, src_gray, new Size(3,3));
+//		Imgproc.Canny(src_gray, canny_out, 18, 54);
+//		Highgui.imwrite("canny.jpg", canny_out);
+		
+		Imgproc.HoughLinesP(src_gray, lines, 1, Math.PI/180, 30, 800, 200);
 		
 		System.out.println(lines.cols());
 		

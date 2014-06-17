@@ -19,7 +19,7 @@ import org.opencv.imgproc.Imgproc;
 import boldogrobot.Ball;
 import boldogrobot.Placeable;
 
-public class WallFinder2 {
+public class WallFinder5 {
 	
 	Mat src;
 	
@@ -28,7 +28,7 @@ public class WallFinder2 {
 		List<Placeable> list = new ArrayList<Placeable>();
 		
 		if(loadImageFromFile){
-			src = Highgui.imread("picture12new.jpg",1);
+			src = Highgui.imread("Picture 14.jpg",1);
 		} else {
 			// load frame (image) from webcam
 			VideoCapture webSource = new VideoCapture(1);
@@ -109,17 +109,23 @@ public class WallFinder2 {
 		Imgproc.approxPolyDP(cnt, poly ,0.6*Imgproc.arcLength(cnt, true), true);
 		List<MatOfPoint> idk = new ArrayList<MatOfPoint>();
 		idk.add(contour);
+		Mat blank = Mat.zeros(src.size(), src.type());
+		Imgproc.drawContours(blank, idk, -1, new Scalar(150, 213, 16), 2);
 		Imgproc.drawContours(src, idk, -1, new Scalar(150, 213, 16), 2);
-		
+		Highgui.imwrite("contour.jpg", blank);
 		Placeable topLeft;
 		Placeable topRight;
 		Placeable bottomLeft;
 		Placeable bottomRight;
 		
+		
 		for (int i = 0; i<1;i++){
 			Mat points = contour.col(i);
 			System.out.println(points.rows());
 			System.out.println(points.cols());
+			for (int j = 0;j<points.rows();j++){
+				
+			}
 //			double[] point = points.get(row, col);
 			
 		}
@@ -130,14 +136,14 @@ public class WallFinder2 {
 		return list; 
 	}
 	
-	public WallFinder2(Mat image) { 
+	public WallFinder5(Mat image) { 
 	}
 	
-	public WallFinder2(){
+	public WallFinder5(){
 	}
 	
 	public static void main(String[] args) throws Exception {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
-		new WallFinder2().run();
+		new WallFinder5().run();
 	}
 }
