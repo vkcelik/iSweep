@@ -1,9 +1,7 @@
 package navigation;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import sun.net.www.content.text.plain;
 import boldogrobot.Placeable;
 
 public class CalculateRegions {
