@@ -32,15 +32,15 @@ public class CalculateRegions {
 
 		ArrayList<Retangle> omroder = new ArrayList<Retangle>();
 		double Bredde = 1800.0;
-		double længde = 1200.0;
+		double laengde = 1200.0;
 
 		double PA = 20.0;
 		double PD = Bredde-PA;
 
 		double a = PA/Bredde;
 		double b = (Bredde-PA)/Bredde;
-		double c = PA/længde;
-		double d = (længde-PA)/længde;
+		double c = PA/laengde;
+		double d = (laengde-PA)/laengde;
 		double e = a;
 		double f = e;
 		double g = c;
