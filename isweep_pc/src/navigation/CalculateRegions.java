@@ -75,7 +75,7 @@ public class CalculateRegions {
 		Placeable K = new  Placeable((int)KXCORDINAT, (int)KYCORDINAT);
 
 		double scaledZRX= (R.getX()-Z.getX())*e;
-		double scaledZRY=(R.getY()-P.getY())*e;
+		double scaledZRY=(R.getY()-Z.getY())*e;
 		double LXCORDINAT = scaledZRX + Z.getX();
 		double LYCORDINAT = scaledZRY + Z.getY();
 
@@ -113,7 +113,7 @@ public class CalculateRegions {
 		double JYCORDINAT = scaledKGY + K.getY();
 
 		double scaledKG1X = (G.getX()-K.getX())*l;
-		double scaledKG1Y=(Q.getY()-K.getY())*l;
+		double scaledKG1Y=(G.getY()-K.getY())*l;
 		double HXCORDINAT = scaledKG1X + K.getX();
 		double HYCORDINAT = scaledKG1Y + K.getY();
 
