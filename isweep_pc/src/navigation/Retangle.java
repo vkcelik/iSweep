@@ -43,5 +43,9 @@ public class Retangle {
 	public Retangle() {
 		super();
 	}
+	
+	public String toString(){
+		return topLeft.toString()+ " ," + topRight.toString()+", " + bottomLeft.toString() +", " + bottomRight.toString() +", ";
+	}
 
 }
