@@ -26,17 +26,17 @@ public class WallFinder4 {
 	Mat src;
 	
 	public List<Placeable> run(String outFileName) throws Exception{
-		boolean loadImageFromFile = true; 
+		boolean loadImageFromFile = false; 
 		List<Placeable> list = new ArrayList<Placeable>();
 		
-		if(loadImageFromFile){
-			if(src.empty()) {src = Highgui.imread("Picture 20.jpg",1);}
-		} else {
-			// load frame (image) from webcam
-			VideoCapture webSource = new VideoCapture(1);
-			Thread.sleep(2000);
-			webSource.retrieve(src);
-		}
+//		if(loadImageFromFile){
+//			if(src.empty()) {src = Highgui.imread("Picture 20.jpg",1);}
+//		} else {
+//			// load frame (image) from webcam
+//			VideoCapture webSource = new VideoCapture(1);
+//			Thread.sleep(2000);
+//			webSource.retrieve(src);
+//		}
 		
 		Mat srcH = new Mat();
 		src.convertTo(srcH, -1, 1.5, 0);
@@ -72,7 +72,8 @@ public class WallFinder4 {
 		/* GOOD UNDER */
 //		Core.inRange(hsv, new Scalar(0, 110, 0), new Scalar(23, 255, 255), filtered);
 //		Core.inRange(hsv, new Scalar(0, 85, 0), new Scalar(255, 255, 255), filtered);
-		Core.inRange(hsv, new Scalar(0, 105, 0), new Scalar(255, 255, 255), filtered);
+//		Core.inRange(hsv, new Scalar(0, 105, 0), new Scalar(255, 255, 255), filtered);
+		Core.inRange(hsv, new Scalar(0, 74, 0), new Scalar(255, 255, 255), filtered);
 		Highgui.imwrite("bin"+outFileName+".jpg", filtered);
 
 //		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4,4));
@@ -94,9 +95,9 @@ public class WallFinder4 {
 
 		double contourArea;
 		MatOfPoint contour;
-		int h,w,x,y;
-		int centerX, centerY;
-		int boundingCircleRadius;
+		double h,w,x,y;
+		double centerX, centerY;
+		double boundingCircleRadius;
 		List<MatOfPoint> big = new ArrayList<MatOfPoint>();
 		double areaMin = 1920*1080;
 		int innerContour = -1;
@@ -149,17 +150,17 @@ public class WallFinder4 {
         Core.line(src, pts.get(2), pts.get(3), new Scalar(0, 213, 255), 2);
         Core.line(src, pts.get(3), pts.get(0), new Scalar(150, 150, 16), 2);
         
-//        Point topLeft = pts.get(3);
-//        Point topRight = pts.get(0);
-//        Point bottomLeft = pts.get(2);
-//        Point bottomRight = pts.get(1);
-//        list.add(new Placeable((int)topLeft.x, (int)topLeft.y));
+        Point topLeft = pts.get(3);
+        Point topRight = pts.get(0);
+        Point bottomLeft = pts.get(2);
+        Point bottomRight = pts.get(1);
+        list.add(new Placeable(topLeft.x, topLeft.y));
 //        Core.putText(src, "TL", new Point(topLeft.x, topLeft.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-//        list.add(new Placeable((int)topRight.x, (int)topRight.y)); 
+        list.add(new Placeable(topRight.x,topRight.y)); 
 //        Core.putText(src, "TR", new Point(topRight.x, topRight.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-//        list.add(new Placeable((int)bottomLeft.x, (int)bottomLeft.y));
+        list.add(new Placeable(bottomLeft.x,bottomLeft.y));
 //        Core.putText(src, "BL", new Point(bottomLeft.x, bottomLeft.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-//        list.add(new Placeable((int)bottomRight.x, (int)bottomRight.y));
+        list.add(new Placeable(bottomRight.x,bottomRight.y));
 //        Core.putText(src, "BR", new Point(bottomRight.x, bottomRight.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
 
         

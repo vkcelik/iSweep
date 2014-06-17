@@ -72,9 +72,9 @@ public class WallFinder3 {
 
 		double contourArea;
 		MatOfPoint contour;
-		int h,w,x,y;
-		int centerX, centerY;
-		int boundingCircleRadius;
+		double h,w,x,y;
+		double centerX, centerY;
+		double boundingCircleRadius;
 		List<MatOfPoint> big = new ArrayList<MatOfPoint>();
 		double areaMin = 1920*1080;
 		int innerContour = -1;
@@ -131,13 +131,13 @@ public class WallFinder3 {
 //        Point topRight = pts.get(0);
 //        Point bottomLeft = pts.get(2);
 //        Point bottomRight = pts.get(1);
-//        list.add(new Placeable((int)topLeft.x, (int)topLeft.y));
+//        list.add(new Placeable(topLeft.x, topLeft.y));
 //        Core.putText(src, "TL", new Point(topLeft.x, topLeft.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-//        list.add(new Placeable((int)topRight.x, (int)topRight.y)); 
+//        list.add(new Placeable(topRight.x, topRight.y)); 
 //        Core.putText(src, "TR", new Point(topRight.x, topRight.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-//        list.add(new Placeable((int)bottomLeft.x, (int)bottomLeft.y));
+//        list.add(new Placeable(bottomLeft.x, bottomLeft.y));
 //        Core.putText(src, "BL", new Point(bottomLeft.x, bottomLeft.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-//        list.add(new Placeable((int)bottomRight.x, (int)bottomRight.y));
+//        list.add(new Placeable(bottomRight.x, bottomRight.y));
 //        Core.putText(src, "BR", new Point(bottomRight.x, bottomRight.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
 
         

@@ -21,7 +21,7 @@ class CircleFinderAdaptiveContour {
 	Mat src;
 
 	public List<Ball> run() throws Exception{
-		boolean loadImageFromFile = false;
+		boolean loadImageFromFile = true;
 		boolean printCircleCoordinates = true;
 		List<Ball> list = new ArrayList<Ball>();
 		Mat src_gray = new Mat();
@@ -30,7 +30,7 @@ class CircleFinderAdaptiveContour {
 
 		if(loadImageFromFile){
 			//			src = Highgui.imread("Picture 12.jpg",1);
-			src = Highgui.imread("Picture 12.jpg", Imgproc.COLOR_BGR2GRAY);
+			src = Highgui.imread("555.jpg", Imgproc.COLOR_BGR2GRAY);
 		} else {
 			// load frame (image) from webcam
 			VideoCapture webSource = new VideoCapture(0);
@@ -57,7 +57,7 @@ class CircleFinderAdaptiveContour {
 		Imgproc.adaptiveThreshold(imageBlurr, imageA, 255, 0, 0, 51, -25); 
 
 		Highgui.imwrite("ext.jpg",imageBlurr);
-		Highgui.imwrite("imageA.jpg",imageA);
+		Highgui.imwrite("imageA1.jpg",imageA);
 		
 //		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4,4));
 //		Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4,4));
@@ -93,14 +93,14 @@ class CircleFinderAdaptiveContour {
 		//		for (int i = 0; i < circles.cols(); i++) {
 		//			double[] circle = circles.get(0,i);
 		////			if (src.get((int)circle[1], (int)circle[0])[2]>140){
-		//				list.add(new Ball((int)circle[0],(int)circle[1]));
-		//				Point center = new Point((int)circle[0], (int)circle[1]);
+		//				list.add(new Ball(circle[0],circle[1]));
+		//				Point center = new Point(circle[0], circle[1]);
 		//
-		//				int radius =  (int) circle[2];
+		//				double radius =  circle[2];
 		//				// circle center
 		//				Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
 		//				// circle outline
-		//				Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
+		//				Core.circle( src, center, (int)radius, new Scalar(0,0,255), 3, 8, 0 );
 		////			}
 		//		}
 		//

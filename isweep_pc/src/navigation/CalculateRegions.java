@@ -22,8 +22,6 @@ public class CalculateRegions {
 	public static void main(String[] args){
 		new CalculateRegions(new Placeable(100, 200), new Placeable(1200, 1300), 
 				new Placeable(100,1700), new Placeable(1200,1700)).run();
-
-
 	}
 
 	public ArrayList<Retangle> run(){
@@ -32,7 +30,7 @@ public class CalculateRegions {
 		double Bredde = 1800.0;
 		double laengde = 1200.0;
 
-		double PA = 20.0;
+		double PA = 200.0;
 		double PD = Bredde-PA;
 
 		double a = PA/Bredde;
@@ -40,7 +38,7 @@ public class CalculateRegions {
 		double c = PA/laengde;
 		double d = (laengde-PA)/laengde;
 		double e = a;
-		double f = e;
+		double f = b;
 		double g = c;
 		double h = d;
 		double i = a;
@@ -63,14 +61,14 @@ public class CalculateRegions {
 		double scaledPZY=(Z.getY()-P.getY())*c;
 		double CXCORDINAT = scaledPZX + P.getX();
 		double CYCORDINAT = scaledPZY + P.getY();
-		Placeable C = new  Placeable((int)CXCORDINAT, (int)CYCORDINAT);
+		Placeable C = new  Placeable(CXCORDINAT, CYCORDINAT);
 
 		double scaledPZ1X= (Z.getX()-P.getX())*d;
 		double scaledPZ1Y=(Z.getY()-P.getY())*d;
 		double KXCORDINAT = scaledPZ1X + P.getX();
 		double KYCORDINAT = scaledPZ1Y + P.getY();
 
-		Placeable K = new  Placeable((int)KXCORDINAT, (int)KYCORDINAT);
+		Placeable K = new  Placeable(KXCORDINAT, KYCORDINAT);
 
 		double scaledZRX= (R.getX()-Z.getX())*e;
 		double scaledZRY=(R.getY()-Z.getY())*e;
@@ -87,13 +85,13 @@ public class CalculateRegions {
 		double GXCORDINAT = scaledRQX + R.getX();
 		double GYCORDINAT = scaledRQY + R.getY();
 
-		Placeable G= new  Placeable((int)GXCORDINAT, (int)GYCORDINAT);
+		Placeable G= new  Placeable(GXCORDINAT, GYCORDINAT);
 
 		double scaledRQ1X = (Q.getX()-R.getX())*h;
 		double scaledRQ1Y=(Q.getY()-R.getY())*h;
 		double FXCORDINAT = scaledRQ1X + R.getX();
 		double FYCORDINAT = scaledRQ1Y + R.getY();
-		Placeable F= new  Placeable((int)FXCORDINAT, (int)FYCORDINAT);
+		Placeable F= new  Placeable(FXCORDINAT, FYCORDINAT);
 
 		double scaledCFX = (F.getX()-C.getX())*i;
 		double scaledCFY=(F.getY()-C.getY())*i;
@@ -116,29 +114,29 @@ public class CalculateRegions {
 		double HYCORDINAT = scaledKG1Y + K.getY();
 
 
-		omroder.add(new Retangle(new Placeable((int)P.getX(), (int)P.getY()), new Placeable((int)AXCORDINAT,(int)AYCORDINAT)
-		,new Placeable((int)CXCORDINAT,(int) CYCORDINAT), new Placeable((int)BXCORDINAT,(int) BYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(P.getX(), P.getY()), new Placeable(AXCORDINAT,AYCORDINAT)
+		,new Placeable(CXCORDINAT,CYCORDINAT), new Placeable(BXCORDINAT,BYCORDINAT)));
 
-		omroder.add(new Retangle(new Placeable((int)AXCORDINAT,(int)AYCORDINAT),new Placeable((int)DXCORDINAT,(int)DYCORDINAT)
-		,new Placeable((int)BXCORDINAT,(int)BYCORDINAT),new Placeable((int)EXCORDINAT,(int)EYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(AXCORDINAT,AYCORDINAT),new Placeable(DXCORDINAT,DYCORDINAT)
+		,new Placeable(BXCORDINAT,BYCORDINAT),new Placeable(EXCORDINAT,EYCORDINAT)));
 
-		omroder.add(new Retangle(new Placeable((int)DXCORDINAT,(int)DYCORDINAT),new Placeable((int)Q.getX(),(int)Q.getY())
-		,new Placeable((int)EXCORDINAT,(int)EYCORDINAT),new Placeable((int)FXCORDINAT,(int)FYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(DXCORDINAT,DYCORDINAT),new Placeable(Q.getX(),Q.getY())
+		,new Placeable(EXCORDINAT,EYCORDINAT),new Placeable(FXCORDINAT,FYCORDINAT)));
 
-		omroder.add(new Retangle(new Placeable((int)CXCORDINAT,(int)CYCORDINAT),new Placeable((int)BXCORDINAT,(int)BYCORDINAT)
-		,new Placeable((int)KXCORDINAT,(int)KYCORDINAT),new Placeable((int)JXCORDINAT,(int)JYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(CXCORDINAT,CYCORDINAT),new Placeable(BXCORDINAT,BYCORDINAT)
+		,new Placeable(KXCORDINAT,KYCORDINAT),new Placeable(JXCORDINAT,JYCORDINAT)));
 
-		omroder.add(new Retangle(new Placeable((int)EXCORDINAT,(int)EYCORDINAT),new Placeable((int)FXCORDINAT,(int)FYCORDINAT)
-		,new Placeable((int)HXCORDINAT,(int)HYCORDINAT),new Placeable((int)GXCORDINAT,(int)GYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(EXCORDINAT,EYCORDINAT),new Placeable(FXCORDINAT,FYCORDINAT)
+		,new Placeable(HXCORDINAT,HYCORDINAT),new Placeable(GXCORDINAT,GYCORDINAT)));
 
-		omroder.add(new Retangle(new Placeable((int)KXCORDINAT,(int)KYCORDINAT),new Placeable((int)JXCORDINAT,(int)JYCORDINAT)
-		,new Placeable((int)Z.getX(),(int)Z.getY()),new Placeable((int)LXCORDINAT,(int)LYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(KXCORDINAT,KYCORDINAT),new Placeable(JXCORDINAT,JYCORDINAT)
+		,new Placeable(Z.getX(),Z.getY()),new Placeable(LXCORDINAT,LYCORDINAT)));
 		
-		omroder.add(new Retangle(new Placeable((int)JXCORDINAT,(int)JYCORDINAT),new Placeable((int)HXCORDINAT,(int)HYCORDINAT)
-		,new Placeable((int)LXCORDINAT,(int)LYCORDINAT),new Placeable((int)IXCORDINAT,(int)IYCORDINAT)));
+		omroder.add(new Retangle(new Placeable(JXCORDINAT,JYCORDINAT),new Placeable(HXCORDINAT,HYCORDINAT)
+		,new Placeable(LXCORDINAT,LYCORDINAT),new Placeable(IXCORDINAT,IYCORDINAT)));
 		
-		omroder.add(new Retangle(new Placeable((int)HXCORDINAT,(int)HYCORDINAT),new Placeable((int)GXCORDINAT,(int)GYCORDINAT)
-		,new Placeable((int)IXCORDINAT,(int)IYCORDINAT),new Placeable((int)R.getX(),(int)R.getY())));
+		omroder.add(new Retangle(new Placeable(HXCORDINAT,HYCORDINAT),new Placeable(GXCORDINAT,GYCORDINAT)
+		,new Placeable(IXCORDINAT,IYCORDINAT),new Placeable(R.getX(),R.getY())));
 		
 		System.out.println(omroder);
 		return omroder;

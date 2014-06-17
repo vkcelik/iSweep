@@ -29,7 +29,7 @@ class CircleFinderCanny {
 		Mat circles = new Mat();
 
 		if(loadImageFromFile){
-			src = Highgui.imread("picture12new.jpg",1);
+			src = Highgui.imread("555.jpg",1);
 			//			src = Highgui.imread("Picture 12.jpg", Imgproc.COLOR_BGR2GRAY);
 		} else {
 			// load frame (image) from webcam
@@ -90,9 +90,9 @@ class CircleFinderCanny {
 
 		double contourArea;
 		MatOfPoint contour;
-		int h,w,x,y;
-		int centerX, centerY;
-		int boundingCircleRadius;
+		double h,w,x,y;
+		double centerX, centerY;
+		double boundingCircleRadius;
 		
 		for(int i=0; i< contours.size();i++){
 			contour = contours.get(i);
@@ -108,9 +108,9 @@ class CircleFinderCanny {
 				y = rect.y;
 				centerX = x+w/2;
 				centerY = y+h/2;
-				boundingCircleRadius = (int)(Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2)));
+				boundingCircleRadius = Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2));
 				Core.circle( src, new Point(centerX, centerY), 3, new Scalar(0,255,0), -1, 8, 0 );
-				Core.circle( src, new Point(centerX, centerY), boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
+				Core.circle( src, new Point(centerX, centerY), (int)boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
 				list.add(new Ball(centerX, centerY));
 			}
 			System.out.println();
@@ -121,14 +121,14 @@ class CircleFinderCanny {
 		//		for (int i = 0; i < circles.cols(); i++) {
 		//			double[] circle = circles.get(0,i);
 		////			if (src.get((int)circle[1], (int)circle[0])[2]>140){
-		//				list.add(new Ball((int)circle[0],(int)circle[1]));
-		//				Point center = new Point((int)circle[0], (int)circle[1]);
+		//				list.add(new Ball(circle[0],circle[1]));
+		//				Point center = new Point(circle[0], circle[1]);
 		//
-		//				int radius =  (int) circle[2];
+		//				double radius = circle[2];
 		//				// circle center
 		//				Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
 		//				// circle outline
-		//				Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
+		//				Core.circle( src, center, (int)radius, new Scalar(0,0,255), 3, 8, 0 );
 		////			}
 		//		}
 		//

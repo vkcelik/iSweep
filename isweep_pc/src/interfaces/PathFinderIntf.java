@@ -2,9 +2,11 @@ package interfaces;
 
 import java.util.ArrayList;
 
+import boldogrobot.Placeable;
+
 public interface PathFinderIntf {
 
-	public ArrayList<Integer> getShortestPath(int[][] graph);
+	public ArrayList<Placeable> getShortestPath(ArrayList<Placeable> objects);
 	
 }
 

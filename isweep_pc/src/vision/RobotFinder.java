@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
@@ -13,16 +15,17 @@ import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 
 import boldogrobot.Ball;
+import boldogrobot.Placeable;
 import boldogrobot.Robot;
 
 public class RobotFinder {
 	
 	Mat src;
 
-	public Robot run() throws Exception{
+	public List<Placeable> run() throws Exception{
 		boolean loadImageFromFile = true;
 		boolean printCircleCoordinates = true;
-		List<Ball> list = new ArrayList<Ball>();
+		List<Placeable> list = new ArrayList<Placeable>();
 		Mat src_gray = new Mat();
 		Mat smooth = new Mat();
 		Mat circles_g = new Mat();
@@ -31,66 +34,115 @@ public class RobotFinder {
 		Mat filteredgron= new Mat();
 		Mat hsv = new Mat();
 		
-		if(loadImageFromFile){
-			src = Highgui.imread("Picture 12.jpg",1);
-		} else {
-			// load frame (image) from webcam
-			VideoCapture webSource = new VideoCapture(1);
-			Thread.sleep(2000);
-			webSource.retrieve(src);
-		}
-
+//		if(loadImageFromFile){
+//			src = Highgui.imread("555.jpg",1);
+//		} else {
+//			// load frame (image) from webcam
+//			
+//			VideoCapture vc = new VideoCapture(1);
+//			if(vc.isOpened()){
+//				System.out.println("Cam opened");
+//			} else {
+//				System.out.println("Cam not opened");
+//			}
+//			src = new Mat();
+//			vc.read(src);
+//
+//			System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920.0));
+//			System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080.0));
+//			try {
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			vc.read(src);
+//		}
+		
+		
+	
 		Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
-		Core.inRange(hsv, new Scalar(130, 98, 97), new Scalar(175, 255, 147), filteredlilla);
-		Core.inRange(hsv, new Scalar(74, 92, 93), new Scalar(99, 127, 240), filteredgron);
+		Core.inRange(hsv, new Scalar(30, 26, 0), new Scalar(90, 212, 255), filteredgron);
+//		Core.inRange(hsv, new Scalar(101, 103, 165), new Scalar(199, 239, 235), filteredlilla);
+		Core.inRange(hsv, new Scalar(27,96,0), new Scalar(255,255,255), filteredlilla);
 		
 		Highgui.imwrite("grøn.jpg", filteredgron);
 		Highgui.imwrite("lilla.jpg", filteredlilla);
 		
-		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
-		Imgproc.HoughCircles(filteredlilla, circles_l, Imgproc.CV_HOUGH_GRADIENT, 2, 255, 25, 25, 5, 15);
+//		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
 
-		Imgproc.GaussianBlur(filteredgron, filteredgron, new Size(27,27), 4, 4);
-		Highgui.imwrite("fejl.jpg", filteredgron);
-		Imgproc.HoughCircles(filteredgron, circles_g, Imgproc.CV_HOUGH_GRADIENT, 2, 255, 25, 25, 5, 15);
+//		Imgproc.GaussianBlur(filteredgron, filteredgron, new Size(27,27), 4, 4);
 		
-		System.out.println("Found "+circles_g.cols() + " grøn circles.");
-		System.out.println("Found "+circles_l.cols() + " lilla circles.");
-
-		for (int i = 0; i < circles_g.cols(); i++) {
-			double[] circle = circles_g.get(0,i);
-			list.add(new Ball((int)circle[0],(int)circle[1]));
-			Point center = new Point((int)circle[0], (int)circle[1]);
-			
-			int radius =  (int) circle[2];
-			// circle center
-			Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
-			// circle outline
-			Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
-		}
+		List<MatOfPoint> contoursgron = new ArrayList<MatOfPoint>();
+		List<MatOfPoint> contourslilla = new ArrayList<MatOfPoint>();
 		
-		for (int i = 0; i < circles_l.cols(); i++) {
-			double[] circle = circles_l.get(0,i);
-			list.add(new Ball((int)circle[0],(int)circle[1]));
-			Point center = new Point((int)circle[0], (int)circle[1]);
-			
-			int radius =  (int) circle[2];
-			// circle center
-			Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
-			// circle outline
-			Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
-		}
+		
+		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7,7));
+		Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7,7));
 
-		if(printCircleCoordinates){
-			for (Ball b: list){
-				System.out.println(b);
+		Imgproc.erode(filteredgron, filteredgron, erodeElement);
+		Imgproc.dilate(filteredgron, filteredgron, dilateElement);
+
+		Imgproc.dilate(filteredgron, filteredgron, dilateElement);
+		Imgproc.erode(filteredgron, filteredgron, erodeElement);
+		
+		Imgproc.findContours(filteredgron, contoursgron, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.drawContours(src, contoursgron, -1, new Scalar(0,213,16),2);
+		for(int i=0; i< contoursgron.size(); i++){
+			System.out.println(Imgproc.contourArea(contoursgron.get(i)));
+			
+			if(Imgproc.contourArea(contoursgron.get(i))>350 && Imgproc.contourArea(contoursgron.get(i))< 550){
+				System.out.println("Found 1");
+				Rect rect = Imgproc.boundingRect(contoursgron.get(i));
+				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
+//				 Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
+				
 			}
+			
 		}
 		
-		Highgui.imwrite("picture12new.jpg", src);	
-		return null;
+		Imgproc.erode(filteredlilla, filteredlilla, erodeElement);
+		Imgproc.dilate(filteredlilla, filteredlilla, dilateElement);
+
+		Imgproc.dilate(filteredlilla, filteredlilla, dilateElement);
+		Imgproc.erode(filteredlilla, filteredlilla, erodeElement);
+		
+		Imgproc.findContours(filteredlilla, contourslilla, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.drawContours(src, contourslilla, -1, new Scalar(0,213,16),2);
+		for(int i=0; i< contourslilla.size(); i++){
+			System.out.println(Imgproc.contourArea(contourslilla.get(i)));
+			
+			if(Imgproc.contourArea(contourslilla.get(i))>350 && Imgproc.contourArea(contourslilla.get(i))< 550){
+				System.out.println("Found 1");
+				Rect rect = Imgproc.boundingRect(contourslilla.get(i));
+				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
+//				Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
+				
+			}
+			
+		}
+		
+		
+		
+		
+		Highgui.imwrite("robot.jpg", src);	
+		return list;
 	}
 	
+	
+	
+	public RobotFinder(Mat src) {
+		super();
+		this.src = src;
+	}
+
+
+
+	public RobotFinder() {
+		super();
+	}
+
+
+
 	public static void main(String[] args) {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
 		try {

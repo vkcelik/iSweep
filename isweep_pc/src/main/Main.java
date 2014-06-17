@@ -54,10 +54,10 @@ public class Main {
 		
 		Direction robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
 		
-		int robote0 = robot.getDirection().getElement(0);
-		int robote1 = robot.getDirection().getElement(1);
-		int toBalle0 = robotBallVector.getElement(0);
-		int toBalle1 = robotBallVector.getElement(1);
+		double robote0 = robot.getDirection().getElement(0);
+		double robote1 = robot.getDirection().getElement(1);
+		double toBalle0 = robotBallVector.getElement(0);
+		double toBalle1 = robotBallVector.getElement(1);
 		
 		double vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
 				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
@@ -69,9 +69,9 @@ public class Main {
 		convert = new Converter(0.4,2.5);
 
 //		if(robot.getX()>ball.getX()){
-//			m.turnLeft((int)vinkel_grader);			
+//			m.turnLeft(vinkel_grader);			
 //		} else {
-//			m.turnRight((int)vinkel_grader);
+//			m.turnRight(vinkel_grader);
 //		}
 
 		System.out.println(vinkel_grader);
@@ -85,7 +85,7 @@ public class Main {
 		robot.updateDirection();
 		
 		
-		int distance_mm = convert.pixelToMm((int) robot.getDistance(ball), 1000);
+		double distance_mm = convert.pixelToMm(robot.getDistance(ball), 1000);
 		System.out.println(distance_mm);
 		followLine(distance_mm);
 		
@@ -98,7 +98,7 @@ public class Main {
 	}
 	
 	
-	static void followLine(int distance_mm){
+	static void followLine(double distance_mm){
 		boolean haveArrived = false;
 		while (!haveArrived){
 			m.move(distance_mm);
@@ -114,7 +114,7 @@ public class Main {
 					// STOP
 					// DREJ ROBOTTEN MOD M�LET
 					// MOVE TILBAGEV�RENDE DISTANCE 
-				int afvigelse = 0;
+				double afvigelse = 0;
 				if (afvigelse > 10){
 					m.stop();
 					

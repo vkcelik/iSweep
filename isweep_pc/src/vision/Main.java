@@ -22,6 +22,7 @@ import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 
 import boldogrobot.Ball;
+import boldogrobot.Placeable;
 
 
 
@@ -70,7 +71,7 @@ public class Main implements ImageAnalyzerIntf{
 		}
 
 //		Mat frame = new Mat();
-		Mat frame =  Highgui.imread("Picture 21.jpg",1);
+		Mat frame =  Highgui.imread("555.jpg",1);
 		Mat hsv = new Mat();
 		Mat filtered = new Mat();
 		MatOfByte mem = new MatOfByte();
@@ -133,8 +134,8 @@ public class Main implements ImageAnalyzerIntf{
 	}
 
 	@Override
-	public List<Ball> getBalls() {
-		List<Ball> balls = new ArrayList<Ball>();
+	public List<Placeable> getBalls() {
+		List<Placeable> balls = new ArrayList<Placeable>();
 		return balls;
 	}
 }

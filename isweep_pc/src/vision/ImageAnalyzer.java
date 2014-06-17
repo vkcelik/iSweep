@@ -5,6 +5,7 @@ import java.util.List;
 import org.opencv.core.Mat;
 
 import boldogrobot.Ball;
+import boldogrobot.Placeable;
 import interfaces.ImageAnalyzerIntf;
 
 public class ImageAnalyzer implements ImageAnalyzerIntf {
@@ -12,8 +13,8 @@ public class ImageAnalyzer implements ImageAnalyzerIntf {
 	Mat image;
 		
 	@Override
-	public List<Ball> getBalls() {
-		List<Ball> balls = null;
+	public List<Placeable> getBalls() {
+		List<Placeable> balls = null;
 		try {
 			balls = new CircleFinder(image).run();
 		} catch (Exception e) {

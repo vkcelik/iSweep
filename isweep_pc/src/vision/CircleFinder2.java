@@ -30,9 +30,17 @@ class CircleFinder2 {
 			src = Highgui.imread("Picture 10.jpg",1);
 		} else {
 			// load frame (image) from webcam
-			VideoCapture webSource = new VideoCapture(1);
-			Thread.sleep(2000);
-			webSource.retrieve(src);
+						VideoCapture webSource = new VideoCapture(0);
+
+						src = new Mat();
+						webSource.read(src);
+
+						System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080));
+						System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920));
+						Thread.sleep(2000);
+						webSource.retrieve(src);
+						System.out.println(src.cols());
+						System.out.println(src.rows());
 		}
 
 		double start=  System.currentTimeMillis();
@@ -54,14 +62,14 @@ class CircleFinder2 {
 
 		for (int i = 0; i < circles.cols(); i++) {
 			double[] circle = circles.get(0,i);
-			list.add(new Ball((int)circle[0],(int)circle[1]));
-			Point center = new Point((int)circle[0], (int)circle[1]);
+			list.add(new Ball(circle[0],circle[1]));
+			Point center = new Point(circle[0], circle[1]);
 			
-			int radius =  (int) circle[2];
+			double radius =  circle[2];
 			// circle center
 			Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
 			// circle outline
-			Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
+			Core.circle( src, center, (int)radius, new Scalar(0,0,255), 3, 8, 0 );
 		}
 
 		if(printCircleCoordinates){

@@ -5,16 +5,16 @@ public class Converter {
 	double pixelPerMm;
 	double mmPerPixel;
 	
-	public int pixelToMm(int pixel, int sideLengthPixel){
-		int L_side_PX=sideLengthPixel, L_side_MM=1000; //1200
-		float mmperpixel = (float)L_side_MM/L_side_PX;
+	public double pixelToMm(double pixel, double sideLengthPixel){
+		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
+		double mmperpixel = L_side_MM/L_side_PX;
 		return (int) (pixel*mmperpixel);
 	}
 	
-	public int mmToPixel(int mm, int sideLengthPixel){
-		int L_side_PX=sideLengthPixel, L_side_MM=1000; //1200
-		float pixelpermm = (float)L_side_PX/L_side_MM;
-		return (int) (mm*pixelpermm);
+	public double mmToPixel(double mm, double sideLengthPixel){
+		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
+		double pixelpermm = L_side_PX/L_side_MM;
+		return mm*pixelpermm;
 	}
 	
 	public Converter(double mmPerPixel, double pixelPerMm) { 
@@ -22,12 +22,12 @@ public class Converter {
 		this.pixelPerMm = pixelPerMm;
 	}
 	
-	public int pixelToMm(int pixel){
-		return (int) (pixel*mmPerPixel);
+	public double pixelToMm(double pixel){
+		return pixel*mmPerPixel;
 	}
 	
-	public int mmToPixel(int mm){
-		return (int) (mm*pixelPerMm);
+	public double mmToPixel(double mm){
+		return mm*pixelPerMm;
 	}
 	
 }

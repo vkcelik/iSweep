@@ -5,20 +5,22 @@ import boldogrobot.Placeable;
 import boldogrobot.Robot;
 
 public class Main {
+	
+	
 	static Robot robot = new Robot(1244, 1047);
 	static Ball b1 = new Ball(1349,145);
-	static int sideLengthPixel = (int) new Placeable(1326, 947).getDistance(new Placeable(1375, 147));
+	static double sideLengthPixel = new Placeable(1326, 947).getDistance(new Placeable(1375, 147));
 
-	static int mmToPixel(int mm, int sideLengthPixel){
-		int L_side_PX=sideLengthPixel, L_side_MM=1000; //1200
-		float pixelpermm = (float)L_side_PX/L_side_MM;
-		return (int) (mm*pixelpermm);
+	static double mmToPixel(double mm, double sideLengthPixel){
+		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
+		double pixelpermm = L_side_PX/L_side_MM;
+		return mm*pixelpermm;
 	}
 
-	static int pixelToMm(int pixel, int sideLengthPixel){
-		int L_side_PX=sideLengthPixel, L_side_MM=1000; //1200
-		float pixelpermm = (float)L_side_PX/L_side_MM;
-		return (int) (pixel/pixelpermm);
+	static double pixelToMm(double pixel, double sideLengthPixel){
+		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
+		double pixelpermm = L_side_PX/L_side_MM;
+		return pixel/pixelpermm;
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -31,10 +33,10 @@ public class Main {
 		Direction d = new Direction(b1_aligned_arm.getX() - robot.getX(), b1_aligned_arm.getY() - robot.getY());
 		System.out.println(d);
 
-		int robote0 = robot.getDirection().getElement(0);
-		int robote1 = robot.getDirection().getElement(1);
-		int toBalle0 = d.getElement(0);
-		int toBalle1 = d.getElement(1);
+		double robote0 = robot.getDirection().getElement(0);
+		double robote1 = robot.getDirection().getElement(1);
+		double toBalle0 = d.getElement(0);
+		double toBalle1 = d.getElement(1);
 
 		double vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
 				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
@@ -52,7 +54,7 @@ public class Main {
 //		System.out.println(vinkel_grader);
 
 
-		int distance_mm = pixelToMm((int) robot.getDistance(b1_aligned_arm), sideLengthPixel);
+		double distance_mm = pixelToMm(robot.getDistance(b1_aligned_arm), sideLengthPixel);
 		System.out.println(distance_mm);
 		m.move(1000);
 

@@ -15,37 +15,38 @@ import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 
 import boldogrobot.Ball;
+import boldogrobot.Placeable;
 
-class CircleFinder {
+public class CircleFinder {
 
 	Mat src;
 
-	public List<Ball> run() throws Exception{
+	public List<Placeable> run() throws Exception{
 		boolean loadImageFromFile = true;
 		boolean printCircleCoordinates = true;
-		List<Ball> list = new ArrayList<Ball>();
+		List<Placeable> list = new ArrayList<Placeable>();
 		Mat src_gray = new Mat();
 		Mat smooth = new Mat();
 		Mat circles = new Mat();
 
-		if(loadImageFromFile){
-			src = Highgui.imread("14029129018685749.jpg",1);
-			//			src = Highgui.imread("Picture 12.jpg", Imgproc.COLOR_BGR2GRAY);
-		} else {
-			// load frame (image) from webcam
-			VideoCapture webSource = new VideoCapture(0);
-
-			src = new Mat();
-			webSource.read(src);
-
-			System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080));
-			System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920));
-			Thread.sleep(2000);
-			webSource.retrieve(src);
-			System.out.println(src.cols());
-			System.out.println(src.rows());
-			Highgui.imwrite("original.jpg",src);
-		}
+//		if(loadImageFromFile){
+//			src = Highgui.imread("555.jpg",1);
+//			//			src = Highgui.imread("Picture 12.jpg", Imgproc.COLOR_BGR2GRAY);
+//		} else {
+//			// load frame (image) from webcam
+//			VideoCapture webSource = new VideoCapture(0);
+//
+//			src = new Mat();
+//			webSource.read(src);
+//
+//			System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080));
+//			System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920));
+//			Thread.sleep(2000);
+//			webSource.retrieve(src);
+//			System.out.println(src.cols());
+//			System.out.println(src.rows());
+//			Highgui.imwrite("original.jpg",src);
+//		}
 
 
 		Mat hsv = new Mat();
@@ -74,14 +75,17 @@ class CircleFinder {
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(8,8)));
 //		Highgui.imwrite("expand.jpg", imageA);
 		
-		Imgproc.erode(filtered, filtered, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8,8)));
+		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(13,13)));
+		
+		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(13,13)));
+		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8,8)));
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9,9)));
 //
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5,5)));
 //		Highgui.imwrite("dilate.jpg", imageA);
 //		
 //		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(15,15)));
-		Highgui.imwrite("erode.jpg", filtered);
+		Highgui.imwrite("erode.jpg", imageA);
 		
 
 //		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9,9));
@@ -105,15 +109,16 @@ class CircleFinder {
 
 		double contourArea;
 		MatOfPoint contour;
-		int h,w,x,y;
-		int centerX, centerY;
-		int boundingCircleRadius;
+		double h,w,x,y;
+		double centerX, centerY;
+		double boundingCircleRadius;
 		
 		for(int i=0; i< contours.size();i++){
 			contour = contours.get(i);
 			contourArea = Imgproc.contourArea(contour);
 			System.out.print(contourArea);
-			if (contourArea > 105 && contourArea < 250){
+//			if (contourArea > 105 && contourArea < 250){
+			if (contourArea > 150 && contourArea < 300){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
 				//				System.out.println(rect.x+rect.width/2+", "+rect.y+rect.height/2);
@@ -123,10 +128,10 @@ class CircleFinder {
 				y = rect.y;
 				centerX = x+w/2;
 				centerY = y+h/2;
-				boundingCircleRadius = (int)(Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2)));
+				boundingCircleRadius = Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2));
 				Core.circle( src, new Point(centerX, centerY), 3, new Scalar(0,255,0), -1, 8, 0 );
-				Core.circle( src, new Point(centerX, centerY), boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
-				list.add(new Ball(centerX, centerY));
+				Core.circle( src, new Point(centerX, centerY), (int)boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
+				list.add(new Placeable(centerX, centerY));
 			}
 			System.out.println();
 		}

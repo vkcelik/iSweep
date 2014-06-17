@@ -37,11 +37,10 @@ public class FrontBack {
 	    double backXCoord = scaledXBack+front.getX();
 	    double backYCoord = scaledYBack + front.getY();
 	    
-		punkter.add(new Placeable((int)frontXCoord,(int)frontYCoord));
-		punkter.add(new Placeable((int)backXCoord,(int)backYCoord));
+		punkter.add(new Placeable(frontXCoord,frontYCoord));
+		punkter.add(new Placeable(backXCoord,backYCoord));
 		System.out.println(punkter);
 		return punkter;
-	
 	}
 	
 	public FrontBack (Placeable front, Placeable back, double fronttobackdist, double robotToback, double robotToFront){

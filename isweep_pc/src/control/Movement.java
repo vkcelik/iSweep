@@ -9,7 +9,7 @@ public class Movement {
 	double pixelPerMm;
 	double mmPerPixel;
 
-	public void move(int millimeter){
+	public void move(double millimeter){
 		int degressToTurnWheel = (int)(millimeter*mm_to_wheeldegress_constant);
 		Motor.A.rotate(degressToTurnWheel,true); 
 		Motor.B.rotate(degressToTurnWheel,true);
@@ -30,34 +30,34 @@ public class Movement {
 		Motor.C.rotateTo(0);
 	}	
 
-	public void turnLeft(int angle){
+	public void turnLeft(double angle){
 		Motor.A.rotate((int)(-angle*convert),true);
 		Motor.B.rotate((int)(angle*convert),false);
 	}
 	
-	public void turnRight(int angle){
+	public void turnRight(double angle){
 		Motor.A.rotate((int)(angle*convert),true);
 		Motor.B.rotate((int)(-angle*convert),false);
 	}
 	
-	private int pixelToMm(int pixel, int sideLengthPixel){
-		int L_side_PX=sideLengthPixel, L_side_MM=1000; //1200
-		float mmperpixel = (float)L_side_MM/L_side_PX;
-		return (int) (pixel*mmperpixel);
+	private double pixelToMm(double pixel, double sideLengthPixel){
+		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
+		double mmperpixel = L_side_MM/L_side_PX;
+		return pixel*mmperpixel;
 	}
 	
-	private int mmToPixel(int mm, int sideLengthPixel){
-		int L_side_PX=sideLengthPixel, L_side_MM=1000; //1200
-		float pixelpermm = (float)L_side_PX/L_side_MM;
-		return (int) (mm*pixelpermm);
+	private double mmToPixel(double mm, double sideLengthPixel){
+		double L_side_PX=sideLengthPixel, L_side_MM=1200; //1200
+		double pixelpermm = L_side_PX/L_side_MM;
+		return mm*pixelpermm;
 	}
 	
-	private int pixelToMm(int pixel){
-		return (int) (pixel*mmPerPixel);
+	private double pixelToMm(double pixel){
+		return pixel*mmPerPixel;
 	}
 	
-	private int mmToPixel(int mm){
-		return (int) (mm*pixelPerMm);
+	private double mmToPixel(double mm){
+		return mm*pixelPerMm;
 	}
 	
 	public void stop(){

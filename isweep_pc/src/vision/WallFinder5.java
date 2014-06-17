@@ -59,9 +59,9 @@ public class WallFinder5 {
 
 		double contourArea;
 		MatOfPoint contour;
-		int h,w,x,y;
-		int centerX, centerY;
-		int boundingCircleRadius;
+		double h,w,x,y;
+		double centerX, centerY;
+		double boundingCircleRadius;
 		List<MatOfPoint> big = new ArrayList<MatOfPoint>();
 		double areaMin = 1920*1080;
 		int innerContour = -1;
@@ -91,9 +91,9 @@ public class WallFinder5 {
 				y = rect.y;
 				centerX = x+w/2;
 				centerY = y+h/2;
-				boundingCircleRadius = (int)(Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2)));
+				boundingCircleRadius = Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2));
 //				Core.circle( src, new Point(centerX, centerY), 3, new Scalar(0,255,0), -1, 8, 0 );
-//				Core.circle( src, new Point(centerX, centerY), boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
+//				Core.circle( src, new Point(centerX, centerY), (int)boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
 				list.add(new Ball(centerX, centerY));
 				big.add(contour);
 			}

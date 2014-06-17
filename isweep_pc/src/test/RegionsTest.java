@@ -38,6 +38,10 @@ public class RegionsTest {
 		}
 		
 		Highgui.imwrite("test.jpg", src);
+		
+		System.out.println(omroder.get(6).getBottomRight());
+		System.out.println(omroder.get(7).getBottomLeft());
+		System.out.println(omroder.get(5).getBottomRight());
 	}
 
 }

@@ -29,7 +29,7 @@ class CircleFinderContour {
 		Mat circles = new Mat();
 
 		if(loadImageFromFile){
-			src = Highgui.imread("Picture 10.jpg",1);
+			src = Highgui.imread("555.jpg",1);
 		} else {
 			// load frame (image) from webcam
 			VideoCapture webSource = new VideoCapture(1);
@@ -69,8 +69,8 @@ class CircleFinderContour {
 			if (area>130 && area<532){
 				mu.add(i, Imgproc.moments(contours.get(i), false));
 				Moments p = mu.get(i);
-				int x = (int) (p.get_m10() / p.get_m00());
-				int y = (int) (p.get_m01() / p.get_m00());
+				double x = p.get_m10() / p.get_m00();
+				double y = p.get_m01() / p.get_m00();
 				Core.circle(src, new Point(x, y), 4, new Scalar(255,49,0,255));
 			}
 		}
@@ -83,8 +83,8 @@ class CircleFinderContour {
 		//
 		//		if (dArea > 10000){
 		//			//calculate the position of the ball
-		//			   int posX = (int) (dM10 / dArea);
-		//			   int posY = (int) (dM01 / dArea);        
+		//			   double posX = dM10 / dArea;
+		//			   double posY = dM01 / dArea;        
 		//			   System.out.println(posX+","+posY);	        
 		//		}
 
@@ -92,14 +92,14 @@ class CircleFinderContour {
 		for (int i = 0; i < circles.cols(); i++) {
 			double[] circle = circles.get(0,i);
 			if (src.get((int)circle[1], (int)circle[0])[2]>140){
-				list.add(new Ball((int)circle[0],(int)circle[1]));
-				Point center = new Point((int)circle[0], (int)circle[1]);
+				list.add(new Ball(circle[0],circle[1]));
+				Point center = new Point(circle[0], circle[1]);
 
-				int radius =  (int) circle[2];
+				double radius = circle[2];
 				// circle center
 				Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
 				// circle outline
-				Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
+				Core.circle( src, center, (int)radius, new Scalar(0,0,255), 3, 8, 0 );
 			}
 		}
 

@@ -56,14 +56,14 @@ class CircleFinderAdaptive {
 		for (int i = 0; i < circles.cols(); i++) {
 			double[] circle = circles.get(0,i);
 //			if (src.get((int)circle[1], (int)circle[0])[2]>140){
-				list.add(new Ball((int)circle[0],(int)circle[1]));
-				Point center = new Point((int)circle[0], (int)circle[1]);
+				list.add(new Ball(circle[0],circle[1]));
+				Point center = new Point(circle[0], circle[1]);
 
-				int radius =  (int) circle[2];
+				double radius =  circle[2];
 				// circle center
 				Core.circle( src, center, 3, new Scalar(0,255,0), -1, 8, 0 );
 				// circle outline
-				Core.circle( src, center, radius, new Scalar(0,0,255), 3, 8, 0 );
+				Core.circle( src, center, (int) radius, new Scalar(0,0,255), 3, 8, 0 );
 //			}
 		}
 
