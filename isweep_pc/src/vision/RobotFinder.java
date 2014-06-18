@@ -61,12 +61,12 @@ public class RobotFinder {
 		
 	
 		Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
-		Core.inRange(hsv, new Scalar(30, 26, 0), new Scalar(90, 212, 255), filteredgron);
+//		Core.inRange(hsv, new Scalar(30, 26, 0), new Scalar(90, 212, 255), filteredgron);
+		Core.inRange(hsv, new Scalar(66, 15, 96), new Scalar(81, 255, 255), filteredgron);
 //		Core.inRange(hsv, new Scalar(101, 103, 165), new Scalar(199, 239, 235), filteredlilla);
-		Core.inRange(hsv, new Scalar(27,96,0), new Scalar(255,255,255), filteredlilla);
+//		Core.inRange(hsv, new Scalar(27,134,169), new Scalar(255,255,255), filteredlilla);
+		Core.inRange(hsv, new Scalar(162,21,81), new Scalar(251,255,255), filteredlilla);
 		
-		Highgui.imwrite("grøn.jpg", filteredgron);
-		Highgui.imwrite("lilla.jpg", filteredlilla);
 		
 //		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
 
@@ -85,13 +85,16 @@ public class RobotFinder {
 		Imgproc.dilate(filteredgron, filteredgron, dilateElement);
 		Imgproc.erode(filteredgron, filteredgron, erodeElement);
 		
+		Highgui.imwrite("grøn.jpg", filteredgron);
+		Highgui.imwrite("lilla.jpg", filteredlilla);
+		
 		Imgproc.findContours(filteredgron, contoursgron, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 		Imgproc.drawContours(src, contoursgron, -1, new Scalar(0,213,16),2);
 		for(int i=0; i< contoursgron.size(); i++){
 			System.out.println(Imgproc.contourArea(contoursgron.get(i)));
 			
 			if(Imgproc.contourArea(contoursgron.get(i))>350 && Imgproc.contourArea(contoursgron.get(i))< 550){
-				System.out.println("Found 1");
+				System.out.println("Found 1 green");
 				Rect rect = Imgproc.boundingRect(contoursgron.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
 //				 Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
@@ -111,8 +114,8 @@ public class RobotFinder {
 		for(int i=0; i< contourslilla.size(); i++){
 			System.out.println(Imgproc.contourArea(contourslilla.get(i)));
 			
-			if(Imgproc.contourArea(contourslilla.get(i))>350 && Imgproc.contourArea(contourslilla.get(i))< 550){
-				System.out.println("Found 1");
+			if(Imgproc.contourArea(contourslilla.get(i))>350 && Imgproc.contourArea(contourslilla.get(i))< 600){
+				System.out.println("Found 1 purple");
 				Rect rect = Imgproc.boundingRect(contourslilla.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
 //				Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
@@ -141,7 +144,9 @@ public class RobotFinder {
 		super();
 	}
 
-
+	public void setImage(Mat frame){
+		src= frame;
+	}
 
 	public static void main(String[] args) {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location

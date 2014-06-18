@@ -10,6 +10,10 @@ public class Robot extends Placeable{
 	public Robot(double x, double y) {
 		super(x, y);
 	}
+	
+	public Robot() {
+		super();
+	}
 
 	public Direction getDirection() {
 		return direction;
@@ -33,6 +37,11 @@ public class Robot extends Placeable{
 
 	public void setBack(Placeable back) {
 		this.back = back;
+	}
+	
+	public void setFront(Placeable front){
+		this.x = front.getX();
+		this.y = front.getY();
 	}
 	
 	public Robot(Placeable front){

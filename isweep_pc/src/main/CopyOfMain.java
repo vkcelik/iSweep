@@ -13,27 +13,65 @@ import boldogrobot.Ball;
 import boldogrobot.Placeable;
 import boldogrobot.Robot;
 import vision.FrontBack;
-import vision.ImageAnalyzer;
 import vision.RobotFinder;
-import vision.WallFinder;
 import vision.WallFinder4;
 import vision.CircleFinder;
 
 public class CopyOfMain {
 	
 	static Converter convert;
-	static Movement m;
+	
+	static Direction robotBallVector;
+	static double robote0;
+	static double robote1;
+	static double toBalle0;
+	static double toBalle1;
+	
+	static double vinkel;
+	static double vinkel_grader;
+	
+	static double distance_mm;
+	
+	static double sumpxpermm;
+	static double summmperpx;
+	
+	static List<Placeable> corners = null;
+	static Mat frame;
+	
+	static double[] pxpermm = new double[4];
+	static double[] mmperpx = new double[4];
+	
+	static double avgPxPerMm;
+	static double avgMmPerPx;
+	
+	static RobotFinder rf = null;
+	static List<Placeable> robotpunkter = null;
+	static List<Placeable> balls = null;
+	
+	static VideoCapture vc;
+	
+	static FrontBack fb = null;
+	
+	static List<Placeable> robotMiddle = null;
+	
+	static Robot robot = new Robot();
+	static List<Placeable> objects = null;
+	
+	static List<Placeable> rute = null;
+	
+	static Movement m = new Movement();
+	static Placeable ball = null;
 	
 	public static void main(String[] args) {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
-		VideoCapture vc = new VideoCapture(0);
+		vc =  new VideoCapture(0);
 		if(vc.isOpened()){
 			System.out.println("Cam opened");
 		} else {
 			System.out.println("Cam not opened");
 		}
-
-		Mat frame = new Mat();
+		
+		frame = new Mat();
 
 		vc.read(frame);
 		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920.0));
@@ -53,69 +91,50 @@ public class CopyOfMain {
 		System.out.println(frame.rows());
 		System.out.println(frame.cols());
 		
-		List<Placeable> corners = null;
-		try {
-			corners = new WallFinder4(frame).run("55");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(corners.size());
-		for (Placeable p: corners){
-			System.out.println(p);
-		}
+//		try {
+//			corners = new WallFinder4(frame).run("55");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		System.out.println(corners.size());
+//		for (Placeable p: corners){
+//			System.out.println(p);
+//		}
+//		
+//		// TOP
+//		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
+//		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
+//		// LEFT
+//		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
+//		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
+//		// RIGHT
+//		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
+//		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
+//		// BOTTOM
+//		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
+//		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
+//			
+//		sumpxpermm=0;
+//		summmperpx=0;
+//		for (int i = 0; i<4;i++){
+//			summmperpx+=mmperpx[i];
+//			sumpxpermm+=pxpermm[i];
+//		}
 		
-		double[] pxpermm = new double[4];
-		double[] mmperpx = new double[4];
+//		avgPxPerMm = sumpxpermm/4;
+//		avgMmPerPx = summmperpx/4;
 		
-		// TOP
-		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
-		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
-		// LEFT
-		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
-		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
-		// RIGHT
-		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
-		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
-		// BOTTOM
-		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
-		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
-			
-		double sumpxpermm=0;
-		double summmperpx=0;
-		for (int i = 0; i<4;i++){
-			summmperpx+=mmperpx[i];
-			sumpxpermm+=pxpermm[i];
-		}
-		
-		double avgPxPerMm = sumpxpermm/4;
-		double avgMmPerPx = summmperpx/4;
+		avgPxPerMm = 0.83745;
+//		avgMmPerPx =  1.40295;
+		avgMmPerPx =  1.31477;
 		
 		convert = new Converter(avgMmPerPx, avgPxPerMm);
 		
 		System.out.println(avgMmPerPx);
 		System.out.println(avgPxPerMm);
 		
+		findAndUpdateRobot();
 		
-		RobotFinder rf = new RobotFinder(frame);
-		List<Placeable> robotpunkter = null;
-		try {
-			robotpunkter = rf.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(robotpunkter.size());
-		
-		FrontBack fb = new FrontBack(robotpunkter.get(0), robotpunkter.get(1), 36.8, 10.5, 17.8);
-		List<Placeable> robotMiddle =  fb.run();
-		
-		System.out.println("robotMiddle points: "+robotMiddle.size());
-		
-		Robot robot = new Robot(robotMiddle.get(0));
-		robot.setBack(robotMiddle.get(1));
-		// ALTID UPDATEDIRECTION EFTER PUNKTER ER FUNDET
-		robot.updateDirection();
-		
-		List<Placeable> balls = null;
 		try {
 			balls = new CircleFinder(frame).run();
 		} catch (Exception e) {
@@ -123,11 +142,12 @@ public class CopyOfMain {
 		}
 		System.out.println(balls.size());
 		
-		
-		List<Placeable> objects = balls;
+		objects = new ArrayList<Placeable>();
+		objects.addAll(balls);
 		objects.add(0, robot.getFront());
 		
-		System.out.println(objects.size());
+		System.out.println("objects size: " +objects.size());
+		System.out.println("balls size: " +balls.size());
 		
 		// Ikke længere nødvendigt her. Pathfinder konstruerer matrixen
 //		double[][] adjacency = new double[objects.size()][objects.size()];
@@ -151,121 +171,36 @@ public class CopyOfMain {
 		
 		// KØR HAMILTON PATH PROGRAM (PATHFINDER)
 
-		List<Placeable> rute = new ArrayList<Placeable>();
-		rute.add(new Placeable(778, 321));
-		rute.add(new Placeable(982, 769));
-		rute.add(new Placeable(1395, 343));
-		rute.add(new Placeable(454, 864));
-		
-		Movement m = new Movement();
-		
-		Placeable ball = rute.get(0);
-		
-		// DREJE START
-		
-		Direction robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
-		
-		double robote0 = robot.getDirection().getElement(0);
-		double robote1 = robot.getDirection().getElement(1);
-		double toBalle0 = robotBallVector.getElement(0);
-		double toBalle1 = robotBallVector.getElement(1);
-		
-		double vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
-				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
-						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
-
-		double vinkel_grader = Math.toDegrees(Math.acos(vinkel));
-		
-		if(robot.getX()<ball.getX()){
-			m.turnLeft(vinkel_grader);			
-		} else {
-			m.turnRight(vinkel_grader);
-		}
-
-		System.out.println(vinkel_grader+" grader");
+		rute = new ArrayList<Placeable>();
+		rute.add(new Placeable(1321, 805));
+		rute.add(new Placeable(1369, 364));
+		rute.add(new Placeable(912, 228));
+		rute.add(new Placeable(703, 348));
 		
 		
-		// DREJE SLUT
+		ball = rute.get(0);
 		
+		turn();
+		vc.read(frame);
+		System.out.println(frame.rows());
+		System.out.println(frame.cols());
+		
+		findAndUpdateRobot();
+		
+		drive();
+		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		vc.read(frame);
+		System.out.println(frame.rows());
+		System.out.println(frame.cols());
 		
-		rf = new RobotFinder(frame);
-		robotpunkter = null;
-		try {
-			robotpunkter = rf.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(robotpunkter.size());
-		
-		fb = new FrontBack(robotpunkter.get(0), robotpunkter.get(1), 36.8, 10.5, 17.8);
-		robotMiddle =  fb.run();
-		
-		System.out.println("robotMiddle points: "+robotMiddle.size());
-		
-		robot = new Robot(robotMiddle.get(0));
-		robot.setBack(robotMiddle.get(1));
-		// ALTID UPDATEDIRECTION EFTER PUNKTER ER FUNDET
-		robot.updateDirection();
-		
-		double distance_mm = convert.pixelToMm(robot.getDistance(ball));
-		System.out.println(distance_mm);
-		m.move(distance_mm);
-		try {Thread.sleep(20000);} catch (InterruptedException e) { e.printStackTrace();}
-		
-		vc.read(frame);
-		
-		// FINDE ROBOT
-		rf = new RobotFinder(frame);
-		robotpunkter = null;
-		try {
-			robotpunkter = rf.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(robotpunkter.size());
-		
-		fb = new FrontBack(robotpunkter.get(0), robotpunkter.get(1), 36.8, 10.5, 17.8);
-		robotMiddle =  fb.run();
-		
-		System.out.println("robotMiddle points: "+robotMiddle.size());
-		
-		robot = new Robot(robotMiddle.get(0));
-		robot.setBack(robotMiddle.get(1));
-		robot.updateDirection();
+		findAndUpdateRobot();
 		
 		ball=rute.get(1);
-		System.out.println();
 		
-		// DREJE START
-		
-		robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
-		
-		robote0 = robot.getDirection().getElement(0);
-		robote1 = robot.getDirection().getElement(1);
-		toBalle0 = robotBallVector.getElement(0);
-		toBalle1 = robotBallVector.getElement(1);
-		
-		vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
-				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
-						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
-
-		vinkel_grader = Math.toDegrees(Math.acos(vinkel));
-		
-		if(robot.getX()>ball.getX()){
-			m.turnLeft(vinkel_grader);			
-		} else {
-			m.turnRight(vinkel_grader);
-		}
-
-		System.out.println(vinkel_grader+" grader");
-		// DREJE SLUT
-		
-		distance_mm = convert.pixelToMm(robot.getDistance(ball));
-		System.out.println(distance_mm);
-		m.move(distance_mm);
-		try {Thread.sleep(20000);} catch (InterruptedException e) { e.printStackTrace();}
+		turn();
+		drive();
+		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		
 		// TAKE PICTURE
@@ -299,7 +234,7 @@ public class CopyOfMain {
 //		if(robot.getX()>ball.getX()){
 //			m.turnLeft((vinkel_grader);			
 //		} else {
-//			m.turnRight(vinkel_grader);
+//			m.turnRight(vinkel_grader);j
 //		}
 
 //		System.out.println(vinkel_grader);
@@ -323,6 +258,58 @@ public class CopyOfMain {
 		//		ImageAnalyzer ia = new ImageAnalyzer();
 		//		ia.setImage(frame);
 		//		ia.getBalls();
+	}
+	
+	static void turn(){
+		robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
+		
+		robote0 = robot.getDirection().getElement(0);
+		robote1 = robot.getDirection().getElement(1);
+		toBalle0 = robotBallVector.getElement(0);
+		toBalle1 = robotBallVector.getElement(1);
+		
+//		vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
+//				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
+//						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
+//
+//		vinkel_grader = Math.toDegrees(Math.acos(vinkel));
+		
+//		Udregning af vinkel
+		double signed_angle = Math.atan2(robote0,robote1) - Math.atan2(toBalle0,toBalle1);
+//		laver vinkel fra radianer til grader
+		double vinkel_grader = Math.toDegrees(Math.acos(signed_angle));
+		
+		m.turn(vinkel_grader);
+
+		System.out.println(vinkel_grader+" grader");
+	}
+	
+	static void findAndUpdateRobot(){
+		rf = new RobotFinder();
+		rf.setImage(frame);
+		robotpunkter = null;
+		try {
+			robotpunkter = rf.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(robotpunkter.size());
+		
+		fb = new FrontBack(robotpunkter.get(0), robotpunkter.get(1), 36.8, 10.5, 17.8);
+		robotMiddle =  fb.run();
+		
+		System.out.println("robotMiddle points: "+robotMiddle.size());
+		
+		robot.setFront(robotMiddle.get(0));
+		robot.setBack(robotMiddle.get(1));
+		robot.updateDirection();
+	}
+	
+	static void drive(){
+		System.out.println("Distance from robot to ball in pixels: " +robot.getDistance(ball) );
+		distance_mm = convert.pixelToMm(robot.getDistance(ball));
+		System.out.println("Distance from robot to ball in mm: " +distance_mm);
+		m.move(distance_mm);
 	}
 	
 	

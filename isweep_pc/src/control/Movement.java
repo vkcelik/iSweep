@@ -30,12 +30,12 @@ public class Movement {
 		Motor.C.rotateTo(0);
 	}	
 
-	public void turnLeft(double angle){
-		Motor.A.rotate((int)(-angle*convert),true);
-		Motor.B.rotate((int)(angle*convert),false);
-	}
+//	public void turnLeft(double angle){
+//		Motor.A.rotate((int)(-angle*convert),true);
+//		Motor.B.rotate((int)(angle*convert),false);
+//	}
 	
-	public void turnRight(double angle){
+	public void turn(double angle){
 		Motor.A.rotate((int)(angle*convert),true);
 		Motor.B.rotate((int)(-angle*convert),false);
 	}
