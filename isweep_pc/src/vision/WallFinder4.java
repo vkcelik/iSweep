@@ -76,7 +76,10 @@ public class WallFinder4 {
 //		Core.inRange(hsv, new Scalar(0, 110, 0), new Scalar(23, 255, 255), filtered);
 //		Core.inRange(hsv, new Scalar(0, 85, 0), new Scalar(255, 255, 255), filtered);
 //		Core.inRange(hsv, new Scalar(0, 105, 0), new Scalar(255, 255, 255), filtered);
-		Core.inRange(hsv, new Scalar(0, 74, 0), new Scalar(255, 255, 255), filtered);
+		
+//		Core.inRange(hsv, new Scalar(0, 74, 0), new Scalar(255, 255, 255), filtered);
+		Core.inRange(hsv, new Scalar(0, 88, 62), new Scalar(255, 255, 255), filtered);
+		
 		Highgui.imwrite("bin"+outFileName+".jpg", filtered);
 
 //		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4,4));

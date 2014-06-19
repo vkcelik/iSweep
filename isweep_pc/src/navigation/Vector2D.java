@@ -21,6 +21,15 @@ public class Vector2D {
 		this.x = x;
 		this.y = y;
 	}
+	
+	public double getLength(){
+		return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
+	}
+	
+	public String toString(){
+		return "["+x+" "+y+"]";
+	}
+	
 	public Vector2D() {
 		super();
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import navigation.PathFinder;
+import navigation.Vector2D;
 
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
@@ -199,9 +200,12 @@ public class CopyOfMain {
 		rute = pf.getShortestPath(objects);
 
 		ball = rute.get(0);
-		
 //		ball = new Placeable(1419, 768);
+		align();
 		gotoXY();
+		m.armCollect();
+		m.armHold();
+		
 		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 //		turn();
@@ -220,7 +224,11 @@ public class CopyOfMain {
 		
 		ball=rute.get(1);
 		
+		
+		align();
 		gotoXY();
+		m.armCollect();
+		m.armHold();
 //		turn();
 //		findAndUpdateRobot();
 //		drive();
@@ -230,7 +238,10 @@ public class CopyOfMain {
 		
 		ball=rute.get(2);
 		
+		align();
 		gotoXY();
+		m.armCollect();
+		m.armHold();
 //		turn();
 //		findAndUpdateRobot();
 //		drive();
@@ -241,7 +252,10 @@ public class CopyOfMain {
 		
 		ball=rute.get(3);
 		
+		align();
 		gotoXY();
+		m.armCollect();
+		m.armHold();
 		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		// TAKE PICTURE
@@ -374,7 +388,7 @@ public class CopyOfMain {
 				break;
 			}
 			m.move(distance_mm);
-			try {Thread.sleep(700);} catch (InterruptedException e) {e.printStackTrace();}
+			try {Thread.sleep(125);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		
 		
@@ -411,6 +425,65 @@ public class CopyOfMain {
 //			}
 //		}
 	}		
+	
+	static void align(){
+		Vector2D retning = new Vector2D(robot.getDirection().getElement(0),robot.getDirection().getElement(1));
+		Vector2D RB= new Vector2D(ball.getX()-robot.getX(), ball.getY()-robot.getY());
+		System.out.println(RB);
+		Vector2D vinkelretRetning = new Vector2D(retning.getY(), -1*retning.getX());
+		System.out.println(vinkelretRetning);
+		double laengdeVinkelRetning = vinkelretRetning.getLength();
+		System.out.println(laengdeVinkelRetning);
+		Vector2D enhedVinkelretRetning = new Vector2D(vinkelretRetning.getX()/laengdeVinkelRetning, vinkelretRetning.getY()/laengdeVinkelRetning);
+		System.out.println(enhedVinkelretRetning);
+		System.out.println(enhedVinkelretRetning.getLength());
+		Vector2D korrektLaengdeVinkelret = new Vector2D(enhedVinkelretRetning.getX()*convert.mmToPixel(48), enhedVinkelretRetning.getY()*convert.mmToPixel(48));
+		System.out.println(korrektLaengdeVinkelret);
+		System.out.println(korrektLaengdeVinkelret.getLength());
+		Placeable ballArm = new Placeable(ball.getX()+korrektLaengdeVinkelret.getX(), ball.getY()+korrektLaengdeVinkelret.getY());
+		System.out.println(ballArm);
+		Vector2D armRobot = new Vector2D(robot.getX()-ballArm.getX(), robot.getY()-ballArm.getY());
+		System.out.println(armRobot);
+		double laengdeArmRobot = convert.pixelToMm(armRobot.getLength());
+		System.out.println(laengdeArmRobot);
+		double forhold = 140/laengdeArmRobot;
+		System.out.println(forhold);
+		Vector2D modRobot = new Vector2D(armRobot.getX()*forhold, armRobot.getY()*forhold);
+		System.out.println(modRobot);
+		Placeable maalMm = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
+		System.out.println(maalMm);
+		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
+		System.out.println(maalPx);
+		ball = maalMm;
+//		Vector2D retning = new Vector2D(robot.getDirection().getElement(0),robot.getDirection().getElement(1));
+//		Vector2D RB= new Vector2D(ball.getX()-robot.getX(), ball.getY()-robot.getY());
+//		System.out.println(RB);
+//		Vector2D vinkelretPaaRB = new Vector2D(-1*RB.getY(), RB.getX());
+//		System.out.println(vinkelretPaaRB);
+//		double laengdeVinkelretRB = vinkelretPaaRB.getLength();
+//		System.out.println(laengdeVinkelretRB);
+//		Vector2D enhedVinkelretPaaRB = new Vector2D(vinkelretPaaRB.getX()/laengdeVinkelretRB, vinkelretPaaRB.getY()/laengdeVinkelretRB);
+//		System.out.println(enhedVinkelretPaaRB);
+//		System.out.println(enhedVinkelretPaaRB.getLength());
+//		Vector2D korrektLaengdeVinkelret = new Vector2D(enhedVinkelretPaaRB.getX()*48, enhedVinkelretPaaRB.getY()*48);
+//		System.out.println(korrektLaengdeVinkelret);
+//		System.out.println(korrektLaengdeVinkelret.getLength());
+//		Placeable ballArm = new Placeable(ball.getX()+korrektLaengdeVinkelret.getX(), ball.getY()+korrektLaengdeVinkelret.getY());
+//		System.out.println(ballArm);
+//		Vector2D armRobot = new Vector2D(robot.getX()-ballArm.getX(), robot.getY()-ballArm.getY());
+//		System.out.println(armRobot);
+//		double laengdeArmRobot = convert.pixelToMm(armRobot.getLength());
+//		System.out.println(laengdeArmRobot);
+//		double forhold = 140/laengdeArmRobot;
+//		System.out.println(forhold);
+//		Vector2D modRobot = new Vector2D(armRobot.getX()*forhold, armRobot.getY()*forhold);
+//		System.out.println(modRobot);
+//		Placeable maalMm = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
+//		System.out.println(maalMm);
+//		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
+//		System.out.println(maalPx);
+//		ball = maalPx;
+	}
 	
 	static void followLine(double distance_mm){
 		boolean haveArrived = false;

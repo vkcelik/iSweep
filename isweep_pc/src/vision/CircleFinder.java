@@ -54,8 +54,10 @@ public class CircleFinder {
 
 		Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
 		Mat filtered = new Mat();
-		Core.inRange(hsv, new Scalar(0, 0, 182), new Scalar(255,108,255), filtered);
+//		Core.inRange(hsv, new Scalar(0, 0, 182), new Scalar(255,108,255), filtered);
 
+		Core.inRange(hsv, new Scalar(0, 0, 188), new Scalar(255,53,255), filtered);
+		
 		Highgui.imwrite("filter.jpg",filtered);
 
 
@@ -76,17 +78,17 @@ public class CircleFinder {
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(8,8)));
 //		Highgui.imwrite("expand.jpg", imageA);
 		
-		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(13,13)));
-		
-		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(13,13)));
-		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8,8)));
+//		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(13,13)));
+//		
+//		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(13,13)));
+//		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8,8)));
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9,9)));
 //
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5,5)));
 //		Highgui.imwrite("dilate.jpg", imageA);
 //		
 //		Imgproc.erode(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(15,15)));
-		Highgui.imwrite("erode.jpg", imageA);
+//		Highgui.imwrite("erode.jpg", imageA);
 		
 
 //		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9,9));
@@ -104,7 +106,7 @@ public class CircleFinder {
 
 
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();    
-		Imgproc.findContours(imageA, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.findContours(filtered, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
 		//		    Imgproc.drawContours(imageBlurr, contours, 1, new Scalar(0,0,255));
 //		Imgproc.drawContours(src, contours, -1, new Scalar(0, 213, 16), 2);
 
@@ -118,8 +120,8 @@ public class CircleFinder {
 			contour = contours.get(i);
 			contourArea = Imgproc.contourArea(contour);
 			System.out.print(contourArea);
-//			if (contourArea > 105 && contourArea < 250){
-			if (contourArea > 150 && contourArea < 300){
+			if (contourArea > 600 && contourArea < 720){
+//			if (contourArea > 150 && contourArea < 300){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
 				//				System.out.println(rect.x+rect.width/2+", "+rect.y+rect.height/2);
