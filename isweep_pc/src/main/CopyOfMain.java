@@ -79,8 +79,8 @@ public class CopyOfMain {
 		}
 //		m.move(2000);
 		
-		m.armCollect();
-		m.armHold();
+//		m.armCollect();
+//		m.armHold();
 		
 		rf = new RobotFinder();
 		rf.setVc(vc);
@@ -110,6 +110,8 @@ public class CopyOfMain {
 //		Highgui.imwrite("555.jpg", frame);
 //		System.out.println(frame.rows());
 //		System.out.println(frame.cols());
+		
+
 		
 		try {
 			corners = wf.run("55");
@@ -198,11 +200,15 @@ public class CopyOfMain {
 
 		ball = rute.get(0);
 		
-		turn();
-		findAndUpdateRobot();
+//		ball = new Placeable(1419, 768);
+		gotoXY();
+		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
 		
-		drive();
-		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
+//		turn();
+//		findAndUpdateRobot();
+//		
+//		drive();
+//		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 //		frame = new Mat();
 //		vc.read(frame);
@@ -210,33 +216,33 @@ public class CopyOfMain {
 //		System.out.println(frame.rows());
 //		System.out.println(frame.cols());
 		
-		findAndUpdateRobot();
+//		findAndUpdateRobot();
 		
 		ball=rute.get(1);
 		
-		turn();
-		findAndUpdateRobot();
-		drive();
-		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
-
-		findAndUpdateRobot();
+		gotoXY();
+//		turn();
+//		findAndUpdateRobot();
+//		drive();
+		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+//
+//		findAndUpdateRobot();
 		
 		ball=rute.get(2);
 		
-		turn();
-		findAndUpdateRobot();
-		drive();
-		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
-		
-		
-		findAndUpdateRobot();
+		gotoXY();
+//		turn();
+//		findAndUpdateRobot();
+//		drive();
+		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+//		
+//		
+//		findAndUpdateRobot();
 		
 		ball=rute.get(3);
 		
-		turn();
-		findAndUpdateRobot();
-		drive();
-		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
+		gotoXY();
+		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		// TAKE PICTURE
 		// Find koordinaterne p� hvor v�gene m�des (inderside).
@@ -355,37 +361,56 @@ public class CopyOfMain {
 	
 	
 	static void gotoXY(){
-		boolean haveArrived = false;
-		while (!haveArrived){
-			initial_distance_mm = convert.pixelToMm(robot.getDistance(ball));
-			m.move(distance_mm);
-			while (true){
-				m.stop();
-				
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				findAndUpdateRobot();
-				turn();
-				distance_mm = convert.pixelToMm(robot.getDistance(ball));
+		while (true){
+			
+			m.stop();
+			findAndUpdateRobot();
+			turn();
+			findAndUpdateRobot();
+			distance_mm = convert.pixelToMm(robot.getDistance(ball));
+			System.out.println("distance to target: " +distance_mm);
+			if (distance_mm <= 100){
 				m.move(distance_mm);
-				// HVIS FRONTEN AFVIGER MERE END 10 MM
-					// STOP
-					// DREJ ROBOTTEN MOD M�LET
-					// MOVE TILBAGEV�RENDE DISTANCE 
-				double afvigelse = 0;
-				if (afvigelse > 10){
-					m.stop();
-					
-					break;
-				} else /*DISTANCE TIL M�L ER MINDRE END 2 MM*/{
-					haveArrived = true;
-				}
+				break;
 			}
-		}		
-	}
+			m.move(distance_mm);
+			try {Thread.sleep(700);} catch (InterruptedException e) {e.printStackTrace();}
+		}
+		
+		
+		
+//		try {Thread.sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
+//		m.stop();
+//		findAndUpdateRobot();
+//		turn();
+//		findAndUpdateRobot();
+//		distance_mm = convert.pixelToMm(robot.getDistance(ball));
+//		m.move(distance_mm);
+//		
+//		try {Thread.sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
+//		m.stop();
+//		findAndUpdateRobot();
+//		turn();
+//		findAndUpdateRobot();
+//		distance_mm = convert.pixelToMm(robot.getDistance(ball));
+//		m.move(distance_mm);
+//		
+//		
+//		while (!haveArrived){
+//			distance_mm = convert.pixelToMm(robot.getDistance(ball));
+//			
+//			m.stop();
+//			findAndUpdateRobot();
+//			turn();
+//			findAndUpdateRobot();
+//			distance_mm = convert.pixelToMm(robot.getDistance(ball));
+//			m.move(distance_mm);
+//			if (distance_mm <= 2){
+//				m.stop();
+//				haveArrived = true;
+//			}
+//		}
+	}		
 	
 	static void followLine(double distance_mm){
 		boolean haveArrived = false;

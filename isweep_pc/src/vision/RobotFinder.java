@@ -31,8 +31,8 @@ public class RobotFinder {
 		Mat smooth = new Mat();
 		Mat circles_g = new Mat();
 		Mat circles_l = new Mat();
-		Mat filteredlilla = new Mat();
-		Mat filteredgron= new Mat();
+		Mat filteredfront = new Mat();
+		Mat filteredback= new Mat();
 		Mat hsv = new Mat();
 		
 //		if(loadImageFromFile){
@@ -65,12 +65,13 @@ public class RobotFinder {
 		Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
 //		Core.inRange(hsv, new Scalar(30, 26, 0), new Scalar(90, 212, 255), filteredgron);
 //		Core.inRange(hsv, new Scalar(33, 17, 137), new Scalar(86, 78, 247), filteredgron);
-		Core.inRange(hsv, new Scalar(25, 32, 0), new Scalar(97, 255, 255), filteredgron);
+//		Core.inRange(hsv, new Scalar(25, 32, 0), new Scalar(97, 255, 255), filteredgron);
+		Core.inRange(hsv, new Scalar(85, 34,130), new Scalar(127, 255, 255), filteredfront); 
 //		Core.inRange(hsv, new Scalar(101, 103, 165), new Scalar(199, 239, 235), filteredlilla);
 //		Core.inRange(hsv, new Scalar(27,134,169), new Scalar(255,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(162,21,81), new Scalar(251,255,255), filteredlilla);
-		Core.inRange(hsv, new Scalar(0,61,62), new Scalar(251,255,255), filteredlilla);
-		
+//		Core.inRange(hsv, new Scalar(0,61,62), new Scalar(251,255,255), filteredlilla);
+		Core.inRange(hsv, new Scalar(16, 56, 0), new Scalar(51, 255, 255), filteredback);
 		
 //		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
 
@@ -83,47 +84,49 @@ public class RobotFinder {
 		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7,7));
 		Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7,7));
 
-		Imgproc.erode(filteredgron, filteredgron, erodeElement);
-		Imgproc.dilate(filteredgron, filteredgron, dilateElement);
 
-		Imgproc.dilate(filteredgron, filteredgron, dilateElement);
-		Imgproc.erode(filteredgron, filteredgron, erodeElement);
 		
-		Highgui.imwrite("grøn.jpg", filteredgron);
+		Imgproc.erode(filteredfront, filteredfront, erodeElement);
+		Imgproc.dilate(filteredfront, filteredfront, dilateElement);
+
+		Imgproc.dilate(filteredfront, filteredfront, dilateElement);
+		Imgproc.erode(filteredfront, filteredfront, erodeElement);
 		
-		Imgproc.findContours(filteredgron, contoursgron, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-		Imgproc.drawContours(src, contoursgron, -1, new Scalar(0,213,16),2);
-		for(int i=0; i< contoursgron.size(); i++){
-			System.out.println(Imgproc.contourArea(contoursgron.get(i)));
+		Highgui.imwrite("front.jpg", filteredfront);
+		
+		Imgproc.findContours(filteredfront, contourslilla, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.drawContours(src, contourslilla, -1, new Scalar(0,213,16),2);
+		for(int i=0; i< contourslilla.size(); i++){
+			System.out.println("F: "+Imgproc.contourArea(contourslilla.get(i)));
 			
-			if(Imgproc.contourArea(contoursgron.get(i))>200 && Imgproc.contourArea(contoursgron.get(i))< 550){
-				System.out.println("Found 1 green");
-				Rect rect = Imgproc.boundingRect(contoursgron.get(i));
+			if(Imgproc.contourArea(contourslilla.get(i))>350 && Imgproc.contourArea(contourslilla.get(i))< 1000){
+				System.out.println("Found 1 FRONT");
+				Rect rect = Imgproc.boundingRect(contourslilla.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
-//				 Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
+//				Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
 				
 			}
 			
 		}
 		
-		Imgproc.erode(filteredlilla, filteredlilla, erodeElement);
-		Imgproc.dilate(filteredlilla, filteredlilla, dilateElement);
+		Imgproc.erode(filteredback, filteredback, erodeElement);
+		Imgproc.dilate(filteredback, filteredback, dilateElement);
 
-		Imgproc.dilate(filteredlilla, filteredlilla, dilateElement);
-		Imgproc.erode(filteredlilla, filteredlilla, erodeElement);
+		Imgproc.dilate(filteredback, filteredback, dilateElement);
+		Imgproc.erode(filteredback, filteredback, erodeElement);
 		
-		Highgui.imwrite("lilla.jpg", filteredlilla);
+		Highgui.imwrite("back.jpg", filteredback);
 		
-		Imgproc.findContours(filteredlilla, contourslilla, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-		Imgproc.drawContours(src, contourslilla, -1, new Scalar(0,213,16),2);
-		for(int i=0; i< contourslilla.size(); i++){
-			System.out.println(Imgproc.contourArea(contourslilla.get(i)));
+		Imgproc.findContours(filteredback, contoursgron, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.drawContours(src, contoursgron, -1, new Scalar(0,213,16),2);
+		for(int i=0; i< contoursgron.size(); i++){
+			System.out.println("B: "+Imgproc.contourArea(contoursgron.get(i)));
 			
-			if(Imgproc.contourArea(contourslilla.get(i))>50 && Imgproc.contourArea(contourslilla.get(i))< 600){
-				System.out.println("Found 1 purple");
-				Rect rect = Imgproc.boundingRect(contourslilla.get(i));
+			if(Imgproc.contourArea(contoursgron.get(i))>600 && Imgproc.contourArea(contoursgron.get(i))< 1400){
+				System.out.println("Found 1 BACK");
+				Rect rect = Imgproc.boundingRect(contoursgron.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
-//				Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
+//				 Core.circle(src, new Point(rect.x+rect.width/2, rect.y+rect.height/2), (int)(Math.sqrt(Math.pow(rect.width/2,2)+Math.pow(rect.height/2, 2))), new Scalar(0,0,255), 3, 8, 0 );
 				
 			}
 			
