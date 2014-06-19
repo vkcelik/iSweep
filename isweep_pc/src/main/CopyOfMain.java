@@ -3,6 +3,8 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
+import navigation.PathFinder;
+
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
@@ -31,6 +33,7 @@ public class CopyOfMain {
 	static double vinkel_grader;
 	
 	static double distance_mm;
+	static double initial_distance_mm;
 	
 	static double sumpxpermm;
 	static double summmperpx;
@@ -44,7 +47,11 @@ public class CopyOfMain {
 	static double avgPxPerMm;
 	static double avgMmPerPx;
 	
-	static RobotFinder rf = null;
+	static RobotFinder rf;
+	static PathFinder pf;
+	static WallFinder4 wf;
+	static CircleFinder cf;
+	
 	static List<Placeable> robotpunkter = null;
 	static List<Placeable> balls = null;
 	
@@ -55,7 +62,7 @@ public class CopyOfMain {
 	static List<Placeable> robotMiddle = null;
 	
 	static Robot robot = new Robot();
-	static List<Placeable> objects = null;
+	static ArrayList<Placeable> objects = null;
 	
 	static List<Placeable> rute = null;
 	
@@ -70,10 +77,22 @@ public class CopyOfMain {
 		} else {
 			System.out.println("Cam not opened");
 		}
+//		m.move(2000);
 		
+		m.armCollect();
+		m.armHold();
+		
+		rf = new RobotFinder();
+		rf.setVc(vc);
+		wf = new WallFinder4();
+		wf.setVc(vc);
+		cf = new CircleFinder();
+		cf.setVc(vc);
+		pf = new PathFinder();
 		frame = new Mat();
 
 		vc.read(frame);
+		System.out.println("frame: "+frame);
 		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920.0));
 		System.out.println(vc.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080.0));
 		try {
@@ -86,47 +105,51 @@ public class CopyOfMain {
 //			
 //		}
 		
-		vc.read(frame);
-		Highgui.imwrite("555.jpg", frame);
-		System.out.println(frame.rows());
-		System.out.println(frame.cols());
+//		vc.read(frame);
+//		System.out.println("frame: "+frame);
+//		Highgui.imwrite("555.jpg", frame);
+//		System.out.println(frame.rows());
+//		System.out.println(frame.cols());
 		
-//		try {
-//			corners = new WallFinder4(frame).run("55");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println(corners.size());
-//		for (Placeable p: corners){
-//			System.out.println(p);
-//		}
-//		
-//		// TOP
-//		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
-//		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
-//		// LEFT
-//		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
-//		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
-//		// RIGHT
-//		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
-//		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
-//		// BOTTOM
-//		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
-//		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
-//			
-//		sumpxpermm=0;
-//		summmperpx=0;
-//		for (int i = 0; i<4;i++){
-//			summmperpx+=mmperpx[i];
-//			sumpxpermm+=pxpermm[i];
-//		}
+		try {
+			corners = wf.run("55");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (corners == null) {
+			System.out.println("null");
+		}
+		System.out.println(corners.size());
+		for (Placeable p: corners){
+			System.out.println(p);
+		}
 		
-//		avgPxPerMm = sumpxpermm/4;
-//		avgMmPerPx = summmperpx/4;
+		// TOP
+		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
+		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
+		// LEFT
+		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
+		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
+		// RIGHT
+		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
+		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
+		// BOTTOM
+		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
+		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
+			
+		sumpxpermm=0;
+		summmperpx=0;
+		for (int i = 0; i<4;i++){
+			summmperpx+=mmperpx[i];
+			sumpxpermm+=pxpermm[i];
+		}
 		
-		avgPxPerMm = 0.83745;
+		avgPxPerMm = sumpxpermm/4;
+		avgMmPerPx = summmperpx/4;
+		
+//		avgPxPerMm = 0.83745;
 //		avgMmPerPx =  1.40295;
-		avgMmPerPx =  1.31477;
+//		avgMmPerPx =  1.293;
 		
 		convert = new Converter(avgMmPerPx, avgPxPerMm);
 		
@@ -136,7 +159,7 @@ public class CopyOfMain {
 		findAndUpdateRobot();
 		
 		try {
-			balls = new CircleFinder(frame).run();
+			balls = cf.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -170,38 +193,50 @@ public class CopyOfMain {
 //		}
 		
 		// KØR HAMILTON PATH PROGRAM (PATHFINDER)
+		
+		rute = pf.getShortestPath(objects);
 
-		rute = new ArrayList<Placeable>();
-		rute.add(new Placeable(1321, 805));
-		rute.add(new Placeable(1369, 364));
-		rute.add(new Placeable(912, 228));
-		rute.add(new Placeable(703, 348));
-		
-		
 		ball = rute.get(0);
 		
 		turn();
-		vc.read(frame);
-		System.out.println(frame.rows());
-		System.out.println(frame.cols());
-		
 		findAndUpdateRobot();
 		
 		drive();
-		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
 		
-		vc.read(frame);
-		System.out.println(frame.rows());
-		System.out.println(frame.cols());
+//		frame = new Mat();
+//		vc.read(frame);
+//		System.out.println("frame: "+frame);
+//		System.out.println(frame.rows());
+//		System.out.println(frame.cols());
 		
 		findAndUpdateRobot();
 		
 		ball=rute.get(1);
 		
 		turn();
+		findAndUpdateRobot();
 		drive();
-		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
+
+		findAndUpdateRobot();
 		
+		ball=rute.get(2);
+		
+		turn();
+		findAndUpdateRobot();
+		drive();
+		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
+		
+		
+		findAndUpdateRobot();
+		
+		ball=rute.get(3);
+		
+		turn();
+		findAndUpdateRobot();
+		drive();
+		try {Thread.sleep(15000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		// TAKE PICTURE
 		// Find koordinaterne pï¿½ hvor vï¿½gene mï¿½des (inderside).
@@ -264,9 +299,13 @@ public class CopyOfMain {
 		robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
 		
 		robote0 = robot.getDirection().getElement(0);
+		System.out.println("robote0: " + robote0);
 		robote1 = robot.getDirection().getElement(1);
+		System.out.println("robote1: " + robote1);
 		toBalle0 = robotBallVector.getElement(0);
+		System.out.println("toBalle0: " + toBalle0);
 		toBalle1 = robotBallVector.getElement(1);
+		System.out.println("toBalle1: " + toBalle1);
 		
 //		vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
 //				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
@@ -277,16 +316,18 @@ public class CopyOfMain {
 //		Udregning af vinkel
 		double signed_angle = Math.atan2(robote0,robote1) - Math.atan2(toBalle0,toBalle1);
 //		laver vinkel fra radianer til grader
-		double vinkel_grader = Math.toDegrees(Math.acos(signed_angle));
+		double vinkel_grader = Math.toDegrees(signed_angle);
+//		vinkel_grader = vinkel_grader * 0.95;
 		
 		m.turn(vinkel_grader);
+//		if(vinkel_grader > 180){
+//			vinkel_grader = vinkel_grader - 360;
+//		}
 
 		System.out.println(vinkel_grader+" grader");
 	}
 	
 	static void findAndUpdateRobot(){
-		rf = new RobotFinder();
-		rf.setImage(frame);
 		robotpunkter = null;
 		try {
 			robotpunkter = rf.run();
@@ -312,6 +353,39 @@ public class CopyOfMain {
 		m.move(distance_mm);
 	}
 	
+	
+	static void gotoXY(){
+		boolean haveArrived = false;
+		while (!haveArrived){
+			initial_distance_mm = convert.pixelToMm(robot.getDistance(ball));
+			m.move(distance_mm);
+			while (true){
+				m.stop();
+				
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				findAndUpdateRobot();
+				turn();
+				distance_mm = convert.pixelToMm(robot.getDistance(ball));
+				m.move(distance_mm);
+				// HVIS FRONTEN AFVIGER MERE END 10 MM
+					// STOP
+					// DREJ ROBOTTEN MOD Mï¿½LET
+					// MOVE TILBAGEVï¿½RENDE DISTANCE 
+				double afvigelse = 0;
+				if (afvigelse > 10){
+					m.stop();
+					
+					break;
+				} else /*DISTANCE TIL Mï¿½L ER MINDRE END 2 MM*/{
+					haveArrived = true;
+				}
+			}
+		}		
+	}
 	
 	static void followLine(double distance_mm){
 		boolean haveArrived = false;

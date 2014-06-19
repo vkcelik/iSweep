@@ -19,7 +19,8 @@ import boldogrobot.Placeable;
 
 public class CircleFinder {
 
-	Mat src;
+	Mat src = new Mat();
+	VideoCapture vc;
 
 	public List<Placeable> run() throws Exception{
 		boolean loadImageFromFile = true;
@@ -48,7 +49,7 @@ public class CircleFinder {
 //			Highgui.imwrite("original.jpg",src);
 //		}
 
-
+		vc.read(src);
 		Mat hsv = new Mat();
 
 		Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
@@ -152,6 +153,10 @@ public class CircleFinder {
 	public static void main(String[] args) throws Exception {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
 		new CircleFinder().run();
+	}
+
+	public void setVc(VideoCapture vc) {
+		this.vc = vc;
 	}
 
 }

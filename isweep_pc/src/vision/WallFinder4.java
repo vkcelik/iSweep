@@ -23,9 +23,12 @@ import boldogrobot.Placeable;
 
 public class WallFinder4 {
 	
-	Mat src;
+	Mat src = new Mat();
+	VideoCapture vc;
 	
 	public List<Placeable> run(String outFileName) throws Exception{
+		
+		vc.read(src);
 		boolean loadImageFromFile = false; 
 		List<Placeable> list = new ArrayList<Placeable>();
 		
@@ -201,6 +204,11 @@ public class WallFinder4 {
 	public WallFinder4(){
 		
 	}
+	
+	public void setVc(VideoCapture vc){
+		this.vc= vc;
+	}
+
 	
 	public static void main(String[] args) throws Exception {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location

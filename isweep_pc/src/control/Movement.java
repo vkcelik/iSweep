@@ -12,7 +12,7 @@ public class Movement {
 	public void move(double millimeter){
 		int degressToTurnWheel = (int)(millimeter*mm_to_wheeldegress_constant);
 		Motor.A.rotate(degressToTurnWheel,true); 
-		Motor.B.rotate(degressToTurnWheel,true);
+		Motor.B.rotate(degressToTurnWheel,false);
 	}
 	
 	public void armCollect(){
