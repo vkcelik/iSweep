@@ -200,16 +200,18 @@ public class CopyOfMain {
 		rute = pf.getShortestPath(objects);
 
 		
-		m.armHold();
+//		m.armHold();
 		
-		ball = rute.get(0);
+//		ball = rute.get(0);
+		ball = new Placeable(0, 0);
 //		ball = new Placeable(1419, 768);
 		findAndUpdateRobot();
 		align();
 		gotoXY();
 		turn();
-		m.armCollect();
-		m.armHold();
+		findAndUpdateRobot();
+//		m.armCollect();
+//		m.armHold();
 		
 		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 		
@@ -349,9 +351,9 @@ public class CopyOfMain {
 		double vinkel_grader = Math.toDegrees(signed_angle);
 //		vinkel_grader = vinkel_grader * 0.95;
 		
-		if(vinkel_grader > 180){
-			vinkel_grader = 360-vinkel_grader;
-		}
+//		if(vinkel_grader > 180){
+//			vinkel_grader = 360-vinkel_grader;
+//		}
 		m.turn(vinkel_grader);
 
 		System.out.println(vinkel_grader+" grader");
@@ -389,9 +391,9 @@ public class CopyOfMain {
 			
 			m.stop();
 			findAndUpdateRobot();
+			align();
 			turn();
 			findAndUpdateRobot();
-			align();
 			distance_mm = convert.pixelToMm(robot.getDistance(target));
 			System.out.println("distance to target: " +distance_mm);
 			if (distance_mm <= 100){
@@ -399,7 +401,7 @@ public class CopyOfMain {
 				break;
 			}
 			m.move(distance_mm);
-			try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
+			try {Thread.sleep(150);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		
 		
@@ -466,6 +468,8 @@ public class CopyOfMain {
 		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
 		System.out.println(maalPx);
 		target = maalMm;
+		
+		target = new Placeable( 701, 486);
 //		Vector2D retning = new Vector2D(robot.getDirection().getElement(0),robot.getDirection().getElement(1));
 //		Vector2D RB= new Vector2D(ball.getX()-robot.getX(), ball.getY()-robot.getY());
 //		System.out.println(RB);

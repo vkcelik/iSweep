@@ -100,7 +100,7 @@ public class RobotFinder {
 		for(int i=0; i< contourslilla.size(); i++){
 			System.out.println("F: "+Imgproc.contourArea(contourslilla.get(i)));
 			
-			if(Imgproc.contourArea(contourslilla.get(i))>290 && Imgproc.contourArea(contourslilla.get(i))< 900){
+			if(Imgproc.contourArea(contourslilla.get(i))>400 && Imgproc.contourArea(contourslilla.get(i))< 1900){
 				System.out.println("Found 1 FRONT");
 				Rect rect = Imgproc.boundingRect(contourslilla.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
