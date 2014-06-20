@@ -66,12 +66,13 @@ public class RobotFinder {
 //		Core.inRange(hsv, new Scalar(30, 26, 0), new Scalar(90, 212, 255), filteredgron);
 //		Core.inRange(hsv, new Scalar(33, 17, 137), new Scalar(86, 78, 247), filteredgron);
 //		Core.inRange(hsv, new Scalar(25, 32, 0), new Scalar(97, 255, 255), filteredgron);
-		Core.inRange(hsv, new Scalar(85, 34,130), new Scalar(127, 255, 255), filteredfront); 
+//		Core.inRange(hsv, new Scalar(71, 105,138), new Scalar(117, 255, 255), filteredfront); 
+		Core.inRange(hsv, new Scalar(37, 59,129), new Scalar(126, 255, 255), filteredfront);
 //		Core.inRange(hsv, new Scalar(101, 103, 165), new Scalar(199, 239, 235), filteredlilla);
 //		Core.inRange(hsv, new Scalar(27,134,169), new Scalar(255,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(162,21,81), new Scalar(251,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(0,61,62), new Scalar(251,255,255), filteredlilla);
-		Core.inRange(hsv, new Scalar(16, 56, 0), new Scalar(51, 255, 255), filteredback);
+		Core.inRange(hsv, new Scalar(0, 100, 162), new Scalar(88, 255, 255), filteredback);
 		
 //		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
 
@@ -99,7 +100,7 @@ public class RobotFinder {
 		for(int i=0; i< contourslilla.size(); i++){
 			System.out.println("F: "+Imgproc.contourArea(contourslilla.get(i)));
 			
-			if(Imgproc.contourArea(contourslilla.get(i))>350 && Imgproc.contourArea(contourslilla.get(i))< 1100){
+			if(Imgproc.contourArea(contourslilla.get(i))>290 && Imgproc.contourArea(contourslilla.get(i))< 900){
 				System.out.println("Found 1 FRONT");
 				Rect rect = Imgproc.boundingRect(contourslilla.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
@@ -122,7 +123,7 @@ public class RobotFinder {
 		for(int i=0; i< contoursgron.size(); i++){
 			System.out.println("B: "+Imgproc.contourArea(contoursgron.get(i)));
 			
-			if(Imgproc.contourArea(contoursgron.get(i))>600 && Imgproc.contourArea(contoursgron.get(i))< 1400){
+			if(Imgproc.contourArea(contoursgron.get(i))>170 && Imgproc.contourArea(contoursgron.get(i))< 900){
 				System.out.println("Found 1 BACK");
 				Rect rect = Imgproc.boundingRect(contoursgron.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));

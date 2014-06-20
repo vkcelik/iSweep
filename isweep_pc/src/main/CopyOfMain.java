@@ -69,6 +69,7 @@ public class CopyOfMain {
 	
 	static Movement m = new Movement();
 	static Placeable ball = null;
+	static Placeable target = null;
 	
 	public static void main(String[] args) {
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
@@ -114,46 +115,45 @@ public class CopyOfMain {
 		
 
 		
-		try {
-			corners = wf.run("55");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (corners == null) {
-			System.out.println("null");
-		}
-		System.out.println(corners.size());
-		for (Placeable p: corners){
-			System.out.println(p);
-		}
+//		try {
+//			corners = wf.run("55");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if (corners == null) {
+//			System.out.println("null");
+//		}
+//		System.out.println(corners.size());
+//		for (Placeable p: corners){
+//			System.out.println(p);
+//		}
+//		
+//		// TOP
+//		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
+//		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
+//		// LEFT
+//		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
+//		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
+//		// RIGHT
+//		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
+//		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
+//		// BOTTOM
+//		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
+//		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
+//			
+//		sumpxpermm=0;
+//		summmperpx=0;
+//		for (int i = 0; i<4;i++){
+//			summmperpx+=mmperpx[i];
+//			sumpxpermm+=pxpermm[i];
+//		}
+//		
+//		avgPxPerMm = sumpxpermm/4;
+//		avgMmPerPx = summmperpx/4;
 		
-		// TOP
-		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
-		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
-		// LEFT
-		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
-		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
-		// RIGHT
-		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
-		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
-		// BOTTOM
-		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
-		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
-			
-		sumpxpermm=0;
-		summmperpx=0;
-		for (int i = 0; i<4;i++){
-			summmperpx+=mmperpx[i];
-			sumpxpermm+=pxpermm[i];
-		}
-		
-		avgPxPerMm = sumpxpermm/4;
-		avgMmPerPx = summmperpx/4;
-		
-//		avgPxPerMm = 0.83745;
-//		avgMmPerPx =  1.40295;
-//		avgMmPerPx =  1.293;
-		
+		avgPxPerMm = 0.8007585714394285;
+		avgMmPerPx =  1.4666499545548353;
+
 		convert = new Converter(avgMmPerPx, avgPxPerMm);
 		
 		System.out.println(avgMmPerPx);
@@ -199,14 +199,19 @@ public class CopyOfMain {
 		
 		rute = pf.getShortestPath(objects);
 
+		
+		m.armHold();
+		
 		ball = rute.get(0);
 //		ball = new Placeable(1419, 768);
+		findAndUpdateRobot();
 		align();
 		gotoXY();
+		turn();
 		m.armCollect();
 		m.armHold();
 		
-		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 //		turn();
 //		findAndUpdateRobot();
@@ -224,39 +229,44 @@ public class CopyOfMain {
 		
 		ball=rute.get(1);
 		
-		
+		findAndUpdateRobot();
 		align();
 		gotoXY();
+		turn();
 		m.armCollect();
 		m.armHold();
 //		turn();
 //		findAndUpdateRobot();
 //		drive();
-		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 //
 //		findAndUpdateRobot();
 		
 		ball=rute.get(2);
 		
+		findAndUpdateRobot();
 		align();
 		gotoXY();
+		turn();
 		m.armCollect();
 		m.armHold();
 //		turn();
 //		findAndUpdateRobot();
 //		drive();
-		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 //		
 //		
 //		findAndUpdateRobot();
 		
 		ball=rute.get(3);
 		
+		findAndUpdateRobot();
 		align();
 		gotoXY();
+		turn();
 		m.armCollect();
 		m.armHold();
-		try {Thread.sleep(12000);} catch (InterruptedException e) { e.printStackTrace();}
+		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		// TAKE PICTURE
 		// Find koordinaterne p� hvor v�gene m�des (inderside).
@@ -316,7 +326,7 @@ public class CopyOfMain {
 	}
 	
 	static void turn(){
-		robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
+		robotBallVector = new Direction(target.getX() - robot.getX(), target.getY() - robot.getY());
 		
 		robote0 = robot.getDirection().getElement(0);
 		System.out.println("robote0: " + robote0);
@@ -339,10 +349,10 @@ public class CopyOfMain {
 		double vinkel_grader = Math.toDegrees(signed_angle);
 //		vinkel_grader = vinkel_grader * 0.95;
 		
+		if(vinkel_grader > 180){
+			vinkel_grader = 360-vinkel_grader;
+		}
 		m.turn(vinkel_grader);
-//		if(vinkel_grader > 180){
-//			vinkel_grader = vinkel_grader - 360;
-//		}
 
 		System.out.println(vinkel_grader+" grader");
 	}
@@ -381,14 +391,15 @@ public class CopyOfMain {
 			findAndUpdateRobot();
 			turn();
 			findAndUpdateRobot();
-			distance_mm = convert.pixelToMm(robot.getDistance(ball));
+			align();
+			distance_mm = convert.pixelToMm(robot.getDistance(target));
 			System.out.println("distance to target: " +distance_mm);
 			if (distance_mm <= 100){
 				m.move(distance_mm);
 				break;
 			}
 			m.move(distance_mm);
-			try {Thread.sleep(125);} catch (InterruptedException e) {e.printStackTrace();}
+			try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		
 		
@@ -454,7 +465,7 @@ public class CopyOfMain {
 		System.out.println(maalMm);
 		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
 		System.out.println(maalPx);
-		ball = maalMm;
+		target = maalMm;
 //		Vector2D retning = new Vector2D(robot.getDirection().getElement(0),robot.getDirection().getElement(1));
 //		Vector2D RB= new Vector2D(ball.getX()-robot.getX(), ball.getY()-robot.getY());
 //		System.out.println(RB);
