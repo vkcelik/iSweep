@@ -57,7 +57,7 @@ public class CircleFinder {
 //		Core.inRange(hsv, new Scalar(0, 0, 182), new Scalar(255,108,255), filtered);
 
 //		Core.inRange(hsv, new Scalar(0, 0, 210), new Scalar(255,255,255), filtered);
-		Core.inRange(hsv, new Scalar(0, 0, 60), new Scalar(255,237,255), filtered);
+		Core.inRange(hsv, new Scalar(0, 0, 81), new Scalar(255,233,255), filtered);
 		
 		Highgui.imwrite("filter.jpg",filtered);
 
@@ -122,7 +122,7 @@ public class CircleFinder {
 			contourArea = Imgproc.contourArea(contour);
 			System.out.print("area: "+contourArea);
 //			if (contourArea > 600 && contourArea < 720){
-			if (contourArea > 200 && contourArea < 450){
+			if (contourArea > 200 && contourArea < 500){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
 				//				System.out.println(rect.x+rect.width/2+", "+rect.y+rect.height/2);

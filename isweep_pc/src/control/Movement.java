@@ -15,14 +15,20 @@ public class Movement {
 		Motor.B.rotate(degressToTurnWheel,true);
 	}
 	
+	public void moveBlocking(double millimeter){
+		int degressToTurnWheel = (int)(millimeter*mm_to_wheeldegress_constant);
+		Motor.A.rotate(degressToTurnWheel,true); 
+		Motor.B.rotate(degressToTurnWheel,false);
+	}
+	
 	public void armCollect(){
 		Motor.C.setSpeed(200);
-		Motor.C.rotateTo(105);
+		Motor.C.rotateTo(100);
 	}
 	
 	public void armHold(){
 		Motor.C.setSpeed(30);
-		Motor.C.rotateTo(60);
+		Motor.C.rotateTo(50);
 	}
 	
 	public void armThrow(){

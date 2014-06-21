@@ -59,11 +59,11 @@ public class Main implements ImageAnalyzerIntf{
 		window2.setSize(640, 360);
 		window2.setVisible(true);
 
-//		Mat frame = new Mat();
+		Mat frame = new Mat();
 
 		VideoCapture webSource = new VideoCapture(0);
-//		webSource.read(frame);
-//		System.out.println("frame: "+frame);
+		webSource.read(frame);
+		System.out.println("frame: "+frame);
 		System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_WIDTH, 1920.0));
 		System.out.println(webSource.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 1080.0));
 		try {
@@ -78,7 +78,7 @@ public class Main implements ImageAnalyzerIntf{
 			System.out.println("Iniciando camera");
 		}
 
-		Mat frame =  Highgui.imread("contrast.jpg",1);
+//		Mat frame =  Highgui.imread("obstaclec.jpg",1);
 		Mat hsv = new Mat();
 		Mat filtered = new Mat();
 		MatOfByte mem = new MatOfByte();
@@ -86,7 +86,7 @@ public class Main implements ImageAnalyzerIntf{
 		
 		while(webSource.grab()){
 			try{
-//				webSource.retrieve(frame);
+				webSource.retrieve(frame);
 				Highgui.imencode(".png", frame, mem);
 				Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
 				imageViewer.updateImage(im);

@@ -16,6 +16,7 @@ import boldogrobot.Ball;
 import boldogrobot.Placeable;
 import boldogrobot.Robot;
 import vision.FrontBack;
+import vision.ObstacleFinder;
 import vision.RobotFinder;
 import vision.WallFinder4;
 import vision.CircleFinder;
@@ -40,6 +41,8 @@ public class CopyOfMain {
 	static double summmperpx;
 	
 	static List<Placeable> corners = null;
+	
+	static Placeable obstacleCenter = null;
 	static Mat frame;
 	
 	static double[] pxpermm = new double[4];
@@ -48,10 +51,13 @@ public class CopyOfMain {
 	static double avgPxPerMm;
 	static double avgMmPerPx;
 	
+	static boolean goToOtherSide;
+	
 	static RobotFinder rf;
 	static PathFinder pf;
 	static WallFinder4 wf;
 	static CircleFinder cf;
+	static ObstacleFinder of;
 	
 	static List<Placeable> robotpunkter = null;
 	static List<Placeable> balls = null;
@@ -72,6 +78,8 @@ public class CopyOfMain {
 	static Placeable target = null;
 	
 	public static void main(String[] args) {
+		m.armCollect();
+		m.armHold();
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
 		vc =  new VideoCapture(0);
 		if(vc.isOpened()){
@@ -79,10 +87,6 @@ public class CopyOfMain {
 		} else {
 			System.out.println("Cam not opened");
 		}
-//		m.move(2000);
-		
-//		m.armCollect();
-//		m.armHold();
 		
 		rf = new RobotFinder();
 		rf.setVc(vc);
@@ -90,6 +94,8 @@ public class CopyOfMain {
 		wf.setVc(vc);
 		cf = new CircleFinder();
 		cf.setVc(vc);
+		of = new ObstacleFinder();
+		of.setVc(vc);
 		pf = new PathFinder();
 		frame = new Mat();
 
@@ -159,6 +165,8 @@ public class CopyOfMain {
 		System.out.println(avgMmPerPx);
 		System.out.println(avgPxPerMm);
 		
+		obstacleCenter = of.run();
+		
 		findAndUpdateRobot();
 		
 		try {
@@ -166,6 +174,7 @@ public class CopyOfMain {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		System.out.println(balls.size());
 		
 		objects = new ArrayList<Placeable>();
@@ -203,14 +212,23 @@ public class CopyOfMain {
 //		ball = new Placeable(0, 0);
 //		findAndUpdateRobot();
 		align();
+		if (goToOtherSide){
+			Vector2D RT = new Vector2D(target.getX()-robot.getX(), target.getY()-robot.getY());
+			double RT_length = RT.getLength();
+			Vector2D rt_unit_v = new Vector2D(RT.getX()/RT_length, RT.getY()/RT_length);
+			double extend_length =  convert.mmToPixel(20);
+			double extend_factor = (RT_length+extend_length)/RT_length;
+			Vector2D extendedVector = new Vector2D(rt_unit_v.getX()*extend_factor, rt_unit_v.getY()*extend_factor);
+			Placeable otherSide = new Placeable(robot.getX()+extendedVector.getX(), robot.getY()+extendedVector.getY());
+			
+		}
 		gotoXY();
 		turn();
 //		findAndUpdateRobot();
-		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+//		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
 		m.armCollect();
 		m.armHold();
 		
-		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 //		turn();
 //		findAndUpdateRobot();
@@ -237,7 +255,6 @@ public class CopyOfMain {
 //		turn();
 //		findAndUpdateRobot();
 //		drive();
-		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 //
 //		findAndUpdateRobot();
 		
@@ -252,7 +269,6 @@ public class CopyOfMain {
 //		turn();
 //		findAndUpdateRobot();
 //		drive();
-		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 //		
 //		
 //		findAndUpdateRobot();
@@ -265,7 +281,6 @@ public class CopyOfMain {
 		turn();
 		m.armCollect();
 		m.armHold();
-		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 		
 		// TAKE PICTURE
 		// Find koordinaterne p� hvor v�gene m�des (inderside).
@@ -354,7 +369,7 @@ public class CopyOfMain {
 		} else if (vinkel_grader < -180){
 			vinkel_grader = vinkel_grader + 360;
 		}
-		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+//		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
 		m.turn(vinkel_grader);
 
 		System.out.println(vinkel_grader+" grader");
@@ -388,8 +403,9 @@ public class CopyOfMain {
 	
 	
 	static void gotoXY(){
+//		double initial_distance = robot.getDistance(target);
+//		double distance_left = robot.getDistance(target);
 		while (true){
-			System.out.println(System.currentTimeMillis() + " STOPPING");
 			m.stop();
 			findAndUpdateRobot();
 			align();
@@ -397,16 +413,15 @@ public class CopyOfMain {
 			findAndUpdateRobot();
 			distance_mm = convert.pixelToMm(robot.getDistance(target));
 			System.out.println("distance to target: " +distance_mm);
-			if (distance_mm <= 150){
-				m.move(distance_mm);
+			if (distance_mm <= 80){
+				m.moveBlocking(distance_mm);
 				break;
 			} else {
-				m.move(distance_mm);
+				m.moveBlocking(80);
+//				distance_left = distance_left - distance_mm;
 			}
-			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
+//			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
 		}
-		
-		
 		
 //		try {Thread.sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
 //		m.stop();
@@ -466,12 +481,17 @@ public class CopyOfMain {
 		Vector2D modRobot = new Vector2D(armRobot.getX()*forhold, armRobot.getY()*forhold);
 		System.out.println(modRobot);
 		System.out.println(convert.pixelToMm(modRobot.getLength()));
-		Placeable maalMm = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
-		System.out.println(maalMm);
-		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
-		System.out.println(maalPx);
-		target = maalMm;
+		Placeable maal = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
+		
+		if(convert.pixelToMm(obstacleCenter.getDistance(maal)) < 200){
+			goToOtherSide = true;
+		}
+		
+		System.out.println(maal);
+		target = maal;
 //		target = new Placeable( 740, 548);
+		
+		
 		
 	}
 	
