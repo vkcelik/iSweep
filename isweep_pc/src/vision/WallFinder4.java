@@ -78,7 +78,9 @@ public class WallFinder4 {
 //		Core.inRange(hsv, new Scalar(0, 105, 0), new Scalar(255, 255, 255), filtered);
 		
 //		Core.inRange(hsv, new Scalar(0, 74, 0), new Scalar(255, 255, 255), filtered);
-		Core.inRange(hsv, new Scalar(0, 88, 62), new Scalar(255, 255, 255), filtered);
+//		Core.inRange(hsv, new Scalar(0, 197, 0), new Scalar(255, 255, 255), filtered);
+		//Core.inRange(hsv, new Scalar(0, 220, 0), new Scalar(189, 255, 255), filtered);
+		Core.inRange(hsv, new Scalar(0, 215, 34), new Scalar(255, 255, 173), filtered);
 		
 		Highgui.imwrite("bin"+outFileName+".jpg", filtered);
 

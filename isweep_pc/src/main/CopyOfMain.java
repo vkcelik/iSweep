@@ -115,44 +115,44 @@ public class CopyOfMain {
 		
 
 		
-//		try {
-//			corners = wf.run("55");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if (corners == null) {
-//			System.out.println("null");
-//		}
-//		System.out.println(corners.size());
-//		for (Placeable p: corners){
-//			System.out.println(p);
-//		}
-//		
-//		// TOP
-//		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
-//		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
-//		// LEFT
-//		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
-//		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
-//		// RIGHT
-//		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
-//		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
-//		// BOTTOM
-//		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
-//		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
-//			
-//		sumpxpermm=0;
-//		summmperpx=0;
-//		for (int i = 0; i<4;i++){
-//			summmperpx+=mmperpx[i];
-//			sumpxpermm+=pxpermm[i];
-//		}
-//		
-//		avgPxPerMm = sumpxpermm/4;
-//		avgMmPerPx = summmperpx/4;
+		try {
+			corners = wf.run("55");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (corners == null) {
+			System.out.println("null");
+		}
+		System.out.println(corners.size());
+		for (Placeable p: corners){
+			System.out.println(p);
+		}
 		
-		avgPxPerMm = 0.8007585714394285;
-		avgMmPerPx =  1.4666499545548353;
+		// TOP
+		pxpermm[0]=corners.get(0).getDistance(corners.get(1))/1800;
+		mmperpx[0]=1800/corners.get(0).getDistance(corners.get(1));
+		// LEFT
+		pxpermm[1]=corners.get(0).getDistance(corners.get(2))/1200;
+		mmperpx[1]=1200/corners.get(0).getDistance(corners.get(2));
+		// RIGHT
+		pxpermm[2]=corners.get(1).getDistance(corners.get(3))/1200;
+		mmperpx[2]=1200/corners.get(1).getDistance(corners.get(3));
+		// BOTTOM
+		pxpermm[3]=corners.get(2).getDistance(corners.get(3))/1800;
+		mmperpx[3]=1800/corners.get(2).getDistance(corners.get(3));
+			
+		sumpxpermm=0;
+		summmperpx=0;
+		for (int i = 0; i<4;i++){
+			summmperpx+=mmperpx[i];
+			sumpxpermm+=pxpermm[i];
+		}
+		
+		avgPxPerMm = sumpxpermm/4;
+		avgMmPerPx = summmperpx/4;
+		
+//		avgPxPerMm = 0.8007585714394285;
+//		avgMmPerPx =  1.4666499545548353;
 
 		convert = new Converter(avgMmPerPx, avgPxPerMm);
 		
@@ -199,19 +199,16 @@ public class CopyOfMain {
 		
 		rute = pf.getShortestPath(objects);
 
-		
-//		m.armHold();
-		
-//		ball = rute.get(0);
-		ball = new Placeable(0, 0);
-//		ball = new Placeable(1419, 768);
-		findAndUpdateRobot();
+		ball = rute.get(0);
+//		ball = new Placeable(0, 0);
+//		findAndUpdateRobot();
 		align();
 		gotoXY();
 		turn();
-		findAndUpdateRobot();
-//		m.armCollect();
-//		m.armHold();
+//		findAndUpdateRobot();
+		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+		m.armCollect();
+		m.armHold();
 		
 		try {Thread.sleep(7000);} catch (InterruptedException e) { e.printStackTrace();}
 		
@@ -328,6 +325,7 @@ public class CopyOfMain {
 	}
 	
 	static void turn(){
+		findAndUpdateRobot();
 		robotBallVector = new Direction(target.getX() - robot.getX(), target.getY() - robot.getY());
 		
 		robote0 = robot.getDirection().getElement(0);
@@ -351,9 +349,12 @@ public class CopyOfMain {
 		double vinkel_grader = Math.toDegrees(signed_angle);
 //		vinkel_grader = vinkel_grader * 0.95;
 		
-//		if(vinkel_grader > 180){
-//			vinkel_grader = 360-vinkel_grader;
-//		}
+		if(vinkel_grader > 180){
+			vinkel_grader = 360-vinkel_grader;
+		} else if (vinkel_grader < -180){
+			vinkel_grader = vinkel_grader + 360;
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
 		m.turn(vinkel_grader);
 
 		System.out.println(vinkel_grader+" grader");
@@ -388,7 +389,7 @@ public class CopyOfMain {
 	
 	static void gotoXY(){
 		while (true){
-			
+			System.out.println(System.currentTimeMillis() + " STOPPING");
 			m.stop();
 			findAndUpdateRobot();
 			align();
@@ -396,12 +397,13 @@ public class CopyOfMain {
 			findAndUpdateRobot();
 			distance_mm = convert.pixelToMm(robot.getDistance(target));
 			System.out.println("distance to target: " +distance_mm);
-			if (distance_mm <= 100){
+			if (distance_mm <= 150){
 				m.move(distance_mm);
 				break;
+			} else {
+				m.move(distance_mm);
 			}
-			m.move(distance_mm);
-			try {Thread.sleep(150);} catch (InterruptedException e) {e.printStackTrace();}
+			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		
 		
@@ -457,47 +459,20 @@ public class CopyOfMain {
 		System.out.println(ballArm);
 		Vector2D armRobot = new Vector2D(robot.getX()-ballArm.getX(), robot.getY()-ballArm.getY());
 		System.out.println(armRobot);
-		double laengdeArmRobot = convert.pixelToMm(armRobot.getLength());
+		double laengdeArmRobot = armRobot.getLength();
 		System.out.println(laengdeArmRobot);
-		double forhold = 140/laengdeArmRobot;
+		double forhold = convert.mmToPixel(140)/laengdeArmRobot;
 		System.out.println(forhold);
 		Vector2D modRobot = new Vector2D(armRobot.getX()*forhold, armRobot.getY()*forhold);
 		System.out.println(modRobot);
+		System.out.println(convert.pixelToMm(modRobot.getLength()));
 		Placeable maalMm = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
 		System.out.println(maalMm);
 		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
 		System.out.println(maalPx);
 		target = maalMm;
+//		target = new Placeable( 740, 548);
 		
-		target = new Placeable( 701, 486);
-//		Vector2D retning = new Vector2D(robot.getDirection().getElement(0),robot.getDirection().getElement(1));
-//		Vector2D RB= new Vector2D(ball.getX()-robot.getX(), ball.getY()-robot.getY());
-//		System.out.println(RB);
-//		Vector2D vinkelretPaaRB = new Vector2D(-1*RB.getY(), RB.getX());
-//		System.out.println(vinkelretPaaRB);
-//		double laengdeVinkelretRB = vinkelretPaaRB.getLength();
-//		System.out.println(laengdeVinkelretRB);
-//		Vector2D enhedVinkelretPaaRB = new Vector2D(vinkelretPaaRB.getX()/laengdeVinkelretRB, vinkelretPaaRB.getY()/laengdeVinkelretRB);
-//		System.out.println(enhedVinkelretPaaRB);
-//		System.out.println(enhedVinkelretPaaRB.getLength());
-//		Vector2D korrektLaengdeVinkelret = new Vector2D(enhedVinkelretPaaRB.getX()*48, enhedVinkelretPaaRB.getY()*48);
-//		System.out.println(korrektLaengdeVinkelret);
-//		System.out.println(korrektLaengdeVinkelret.getLength());
-//		Placeable ballArm = new Placeable(ball.getX()+korrektLaengdeVinkelret.getX(), ball.getY()+korrektLaengdeVinkelret.getY());
-//		System.out.println(ballArm);
-//		Vector2D armRobot = new Vector2D(robot.getX()-ballArm.getX(), robot.getY()-ballArm.getY());
-//		System.out.println(armRobot);
-//		double laengdeArmRobot = convert.pixelToMm(armRobot.getLength());
-//		System.out.println(laengdeArmRobot);
-//		double forhold = 140/laengdeArmRobot;
-//		System.out.println(forhold);
-//		Vector2D modRobot = new Vector2D(armRobot.getX()*forhold, armRobot.getY()*forhold);
-//		System.out.println(modRobot);
-//		Placeable maalMm = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
-//		System.out.println(maalMm);
-//		Placeable maalPx = new Placeable(convert.mmToPixel(maalMm.getX()), convert.mmToPixel(maalMm.getY()));
-//		System.out.println(maalPx);
-//		ball = maalPx;
 	}
 	
 	static void followLine(double distance_mm){

@@ -56,7 +56,8 @@ public class CircleFinder {
 		Mat filtered = new Mat();
 //		Core.inRange(hsv, new Scalar(0, 0, 182), new Scalar(255,108,255), filtered);
 
-		Core.inRange(hsv, new Scalar(0, 0, 171), new Scalar(255,58,255), filtered);
+//		Core.inRange(hsv, new Scalar(0, 0, 210), new Scalar(255,255,255), filtered);
+		Core.inRange(hsv, new Scalar(0, 0, 60), new Scalar(255,237,255), filtered);
 		
 		Highgui.imwrite("filter.jpg",filtered);
 
@@ -72,7 +73,7 @@ public class CircleFinder {
 		Highgui.imwrite("ext.jpg",imageBlurr);
 		//		    Imgproc.adaptiveThreshold(src_gray, bw, 255, 0, 0, 51, -25); 
 		//		    Imgproc.adaptiveThreshold(imageBlurr, imageA, 255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,7, 5);
-		Imgproc.adaptiveThreshold(imageBlurr, imageA, 255, 0, 0, 51, -25);
+		Imgproc.adaptiveThreshold(imageBlurr, imageA, 255, 0, 0, 33, -25);
 		Highgui.imwrite("imageA.jpg",imageA);
 		
 //		Imgproc.dilate(imageA, imageA, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(8,8)));
@@ -106,7 +107,7 @@ public class CircleFinder {
 
 
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();    
-		Imgproc.findContours(imageA, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.findContours(filtered, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
 		//		    Imgproc.drawContours(imageBlurr, contours, 1, new Scalar(0,0,255));
 //		Imgproc.drawContours(src, contours, -1, new Scalar(0, 213, 16), 2);
 
@@ -119,9 +120,9 @@ public class CircleFinder {
 		for(int i=0; i< contours.size();i++){
 			contour = contours.get(i);
 			contourArea = Imgproc.contourArea(contour);
-			System.out.print(contourArea);
+			System.out.print("area: "+contourArea);
 //			if (contourArea > 600 && contourArea < 720){
-			if (contourArea > 150 && contourArea < 300){
+			if (contourArea > 200 && contourArea < 450){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
 				//				System.out.println(rect.x+rect.width/2+", "+rect.y+rect.height/2);
