@@ -124,7 +124,7 @@ public class CircleFinder {
 			contourArea = Imgproc.contourArea(contour);
 			System.out.print("area: "+contourArea);
 //			if (contourArea > 60 && contourArea < 720){
-			if (contourArea > 100 && contourArea < 1000){
+			if (contourArea > 15 && contourArea < 1000){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
 				//				System.out.println(rect.x+rect.width/2+", "+rect.y+rect.height/2);

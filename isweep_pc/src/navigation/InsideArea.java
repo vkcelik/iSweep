@@ -9,26 +9,45 @@ import boldogrobot.Ball;
 
 public class InsideArea {
 
-	public void run(){
-		ArrayList<Retangle> Omroder = new ArrayList<Retangle>();
+	
+	public int run(ArrayList<Retangle> omroder, Placeable ball){
+		int ret = -1;
+		for(int i=0; i<omroder.size();i++){
+			Retangle f = omroder.get(i);
+			Placeable P = f.topLeft;
+			Placeable Q = f.topRight;
+			Placeable R = f.bottomLeft;
+			Placeable A = new Placeable(ball.getX(), ball.getY());
 
-		Omroder.add(new Retangle(new Placeable(100,100),new Placeable(200,100),new Placeable(100,200),new Placeable(200,200)));
-		Omroder.add(new Retangle(new Placeable(200,100),new Placeable(200,200),new Placeable(400,100),new Placeable(400,200)));
-		Omroder.add(new Retangle(new Placeable(400, 100),new Placeable(500, 100), new Placeable(400, 200), new Placeable(500, 200)));
-		Omroder.add(new Retangle(new Placeable(100, 200),new Placeable(200, 200), new Placeable(100, 300), new Placeable(200, 300)));
-		Omroder.add(new Retangle(new Placeable(400, 200),new Placeable(500, 200), new Placeable(400, 300), new Placeable(500, 300)));
-		Omroder.add(new Retangle(new Placeable(100, 300), new Placeable(200, 300), new Placeable(100, 400), new Placeable(200, 400)));
-		Omroder.add(new Retangle(new Placeable(200, 300), new Placeable(400, 300), new Placeable(200, 400), new Placeable(400, 400)));
-		Omroder.add(new Retangle(new Placeable(400, 300), new Placeable(500, 300), new Placeable(400, 400), new Placeable(500, 400)));
+			Vector2D PQ = new Vector2D(Q.getX()-P.getX(), Q.getY()-P.getY());
+			Vector2D PR = new Vector2D(R.getX()-P.getX(), R.getY()-P.getY());
+			Vector2D PA = new Vector2D(A.getX()-P.getX(), A.getY()-P.getY());
 
-		ArrayList<Ball> balls = new ArrayList<Ball>();
+			double d = det(PQ, PR);
 
-		balls.add(new Ball(150,50));
-		balls.add(new Ball(375,75));
-		balls.add(new Ball(150,350));
+			double n = -det(PA, PQ)/d;
+			double m = det(PA, PR)/d;
 
-		for (Ball b: balls){
-			for(Retangle f: Omroder){
+
+			if ((0 <= n && n <= 1) && (0 <= m && m<=1)){
+
+				ret = i;
+			}
+			else {
+
+				ret = -1;
+
+			}
+
+
+		}
+		return ret;
+	}
+
+	
+	public void run(ArrayList<Retangle> omroder, ArrayList<Placeable> balls){
+		for (Placeable b: balls){
+			for(Retangle f: omroder){
 
 				Placeable P = f.topLeft;
 				Placeable Q = f.topRight;
@@ -67,7 +86,7 @@ public class InsideArea {
 	}
 	
 	public static void main(String[] args) {
-		new InsideArea().run();
+		//new InsideArea().run();
 	}
 
 }

@@ -3,6 +3,8 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
+import navigation.CalculateRegions;
+import navigation.InsideArea;
 import navigation.PathFinder;
 import navigation.Vector2D;
 
@@ -86,6 +88,9 @@ public class CopyOfMain {
 	static boolean avoiding = false;
 
 	public static void main(String[] args) {
+//		m.armCollect();
+//		m.armHold();
+//		m.turn(360);
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
 		vc =  new VideoCapture(0);
 		if(vc.isOpened()){
@@ -188,14 +193,14 @@ public class CopyOfMain {
 		//findGoalTarget();
 
 		punkter = new ArrayList<Placeable>();
-		
-		
+
+
 		System.out.println(findGoalTarget());
 
 		m.armCollect();
 		m.armHold();
-		
-		
+
+
 		do {
 			Placeable ball = rute.remove(0);
 			System.out.println("GOING FOR: " + ball);
@@ -419,7 +424,7 @@ public class CopyOfMain {
 
 		System.out.println(vinkel_grader+" grader");
 	}
-	
+
 	static void turnGoal(Placeable target){
 		//findAndUpdateRobot();
 		robotBallVector = new Direction(target.getX() - robot.getX(), target.getY() - robot.getY());
@@ -445,11 +450,11 @@ public class CopyOfMain {
 		double vinkel_grader = Math.toDegrees(signed_angle);
 		//		vinkel_grader = vinkel_grader * 0.95;
 
-//		if(vinkel_grader > 180){
-//			vinkel_grader = 360-vinkel_grader;
-//		} else if (vinkel_grader < -180){
-//			vinkel_grader = vinkel_grader + 360;
-//		}
+		//		if(vinkel_grader > 180){
+		//			vinkel_grader = 360-vinkel_grader;
+		//		} else if (vinkel_grader < -180){
+		//			vinkel_grader = vinkel_grader + 360;
+		//		}
 		//		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
 		m.turn(vinkel_grader);
 
@@ -540,7 +545,19 @@ public class CopyOfMain {
 		while (true){
 			//			m.stop();
 			findAndUpdateRobot();
-
+			Placeable wall = approachWall(target);
+			if (wall!=null && !avoiding){
+				int wallIndex = -1;
+				for (int i = 0; i<punkter.size();i++){
+					if (punkter.get(i).getType().equals("Wall")){
+						wallIndex = i;
+					}
+				}
+				if (wallIndex != -1){
+					punkter.remove(wallIndex);
+				}
+				punkter.add(wall);
+			} else {
 			Placeable samlePos = align(target);
 			if (!avoiding){
 				int samleIndex = -1;
@@ -553,6 +570,7 @@ public class CopyOfMain {
 					punkter.remove(samleIndex);
 				}
 				punkter.add(samlePos);
+			}
 			}
 			Placeable avoid = avoidCollision(punkter.get(0));
 			if (avoid != null) {
@@ -576,8 +594,13 @@ public class CopyOfMain {
 					System.out.println("PUNKT TYPE: "+punkter.get(0).getType());
 				}
 				if (punkter.size() == 1 && punkter.get(0).getType().equals("Samle")){
-//					punkter.remove(0);
+					//					punkter.remove(0);
 					break;
+				}
+				
+				if (punkter.size() == 1 && punkter.get(0).getType().equals("Wall")){
+					
+					punkter.add(align(target));
 				}
 				punkter.remove(0);
 			} else {
@@ -587,8 +610,8 @@ public class CopyOfMain {
 		}
 
 	}
-	
-	
+
+
 	static void gotoGoal(Placeable target){
 		List<Placeable> way = new ArrayList<Placeable>();
 		way.add(target);
@@ -669,8 +692,50 @@ public class CopyOfMain {
 		//			goToOtherSide = true;
 		//		}
 
+
+
 		return maal;
 	}
+
+	static Placeable approachWall(Placeable ball){
+		double wall_dist = convert.mmToPixel(300);
+		Placeable ret = null;
+		CalculateRegions cr = new CalculateRegions(corners.get(0), corners.get(1), corners.get(2), corners.get(3));
+		InsideArea ia = new InsideArea();
+		int area = ia.run(cr.run(), ball);
+		if(area != -1){
+			switch (area) {
+			case 0:
+
+				break;
+			case 1:
+				ret = new Placeable(ball.getX(), ball.getY()+wall_dist,"Wall");
+				break;
+			case 2:
+				
+				break;
+			case 3:
+				ret = new Placeable(ball.getX() + wall_dist, ball.getY(),"Wall");
+				break;
+			case 4:
+				ret = new Placeable(ball.getX() - wall_dist, ball.getY(),"Wall");
+				break;
+			case 5:
+
+				break;
+			case 6:
+				ret = new Placeable(ball.getX(), ball.getY()+ wall_dist,"Wall");
+				break;
+			case 7:
+
+				break;
+			default:
+				break;
+			}
+		}
+		return ret;
+	}
+
 
 	static Placeable avoidCollision(Placeable go){
 		Placeable ret = null;
