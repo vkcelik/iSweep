@@ -22,8 +22,8 @@ public class Movement {
 	}
 	
 	public void armCollect(){
-		Motor.C.setSpeed(200);
-		Motor.C.rotateTo(100);
+		Motor.C.setSpeed(400);
+		Motor.C.rotateTo(100, false);
 	}
 	
 	public void armHold(){
@@ -33,7 +33,7 @@ public class Movement {
 	
 	public void armThrow(){
 		Motor.C.setSpeed(100);
-		Motor.C.rotateTo(0);
+		Motor.C.rotateTo(0, false);
 	}	
 
 //	public void turnLeft(double angle){

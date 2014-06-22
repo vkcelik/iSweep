@@ -42,7 +42,7 @@ public class WallFinder4 {
 //		}
 		
 		Mat srcH = new Mat();
-		src.convertTo(srcH, -1, 1.5, 0);
+		src.convertTo(srcH, -1, 1.1, 0);
 		Highgui.imwrite("contrast.jpg", srcH);
 		
 //		Mat img_hist_equalized = new Mat();
@@ -159,17 +159,61 @@ public class WallFinder4 {
         Core.line(src, pts.get(2), pts.get(3), new Scalar(0, 213, 255), 2);
         Core.line(src, pts.get(3), pts.get(0), new Scalar(150, 150, 16), 2);
         
-        Point topLeft = pts.get(3);
-        Point topRight = pts.get(0);
-        Point bottomLeft = pts.get(2);
-        Point bottomRight = pts.get(1);
-        list.add(new Placeable(topLeft.x, topLeft.y));
+        double minX = pts.get(0).x;
+        double minY = pts.get(0).y;
+        double maxX = pts.get(0).x;
+        double maxY = pts.get(0).y;
+        
+        for(int i = 0; i<4;i++){
+        	Point p = pts.get(i);
+        	if (p.x>maxX){
+        		maxX = p.x;
+        	}
+        	if (p.x<minX){
+        		minX = p.x;
+        	}
+        	if (p.y<minY){
+        		minY = p.y;
+        	}
+        	if (p.y>maxY){
+        		maxY = p.y;
+        	}
+        }
+        
+        List<Placeable> ideal = new ArrayList<Placeable>();
+        ideal.add(new Placeable(minX, minY));
+        ideal.add(new Placeable(maxX, minY));
+        ideal.add(new Placeable(minX, maxY));
+        ideal.add(new Placeable(maxX, maxY));
+        
+        for(int i=0;i<4;i++){
+        	int minDistIndex = -1;
+        	double minDist = 999999999; 
+        	for (int j = 0; j < pts.size(); j++) {
+				if(ideal.get(i).getDistance(new Placeable(pts.get(j).x, pts.get(j).y))<minDist){
+					minDistIndex = j;
+					minDist = ideal.get(i).getDistance(new Placeable(pts.get(j).x, pts.get(j).y));
+				}
+			}
+        	list.add(new Placeable(pts.get(minDistIndex).x,pts.get(minDistIndex).y));
+        }
+        
+        System.out.println("WALLS");
+        for (Placeable q: list){
+        	System.out.println(q);
+        }
+        
+//        Point topLeft = pts.get(3);
+//        Point topRight = pts.get(0);
+//        Point bottomLeft = pts.get(2);
+//        Point bottomRight = pts.get(1);
+//        list.add(new Placeable(topLeft.x, topLeft.y));
 //        Core.putText(src, "TL", new Point(topLeft.x, topLeft.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-        list.add(new Placeable(topRight.x,topRight.y)); 
+//        list.add(new Placeable(topRight.x,topRight.y)); 
 //        Core.putText(src, "TR", new Point(topRight.x, topRight.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-        list.add(new Placeable(bottomLeft.x,bottomLeft.y));
+//        list.add(new Placeable(bottomLeft.x,bottomLeft.y));
 //        Core.putText(src, "BL", new Point(bottomLeft.x, bottomLeft.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
-        list.add(new Placeable(bottomRight.x,bottomRight.y));
+//        list.add(new Placeable(bottomRight.x,bottomRight.y));
 //        Core.putText(src, "BR", new Point(bottomRight.x, bottomRight.y), Core.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 213, 16), 2);
 
         

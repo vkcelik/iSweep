@@ -58,7 +58,7 @@ public class CircleFinder {
 
 //		Core.inRange(hsv, new Scalar(0, 0, 210), new Scalar(255,255,255), filtered);
 //		Core.inRange(hsv, new Scalar(0, 0, 81), new Scalar(255,233,255), filtered);
-		Core.inRange(hsv, new Scalar(25, 0, 56), new Scalar(67,255,255), filtered);
+		Core.inRange(hsv, new Scalar(0, 0, 88), new Scalar(255,237,255), filtered);
 		Imgproc.dilate(filtered, filtered, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(6,6)));
 		
 		Highgui.imwrite("filter.jpg",filtered);
@@ -124,7 +124,7 @@ public class CircleFinder {
 			contourArea = Imgproc.contourArea(contour);
 			System.out.print("area: "+contourArea);
 //			if (contourArea > 60 && contourArea < 720){
-			if (contourArea > 200 && contourArea < 500){
+			if (contourArea > 100 && contourArea < 1000){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
 				//				System.out.println(rect.x+rect.width/2+", "+rect.y+rect.height/2);
@@ -137,7 +137,7 @@ public class CircleFinder {
 				boundingCircleRadius = Math.sqrt(Math.pow(w/2,2)+Math.pow(h/2, 2));
 				Core.circle( src, new Point(centerX, centerY), 3, new Scalar(0,255,0), -1, 8, 0 );
 				Core.circle( src, new Point(centerX, centerY), (int)boundingCircleRadius, new Scalar(0,0,255), 3, 8, 0 );
-				list.add(new Placeable(centerX, centerY));
+				list.add(new Placeable(centerX, centerY,"Bold"));
 			}
 			System.out.println();
 		}

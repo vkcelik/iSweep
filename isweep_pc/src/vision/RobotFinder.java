@@ -67,14 +67,14 @@ public class RobotFinder {
 //		Core.inRange(hsv, new Scalar(33, 17, 137), new Scalar(86, 78, 247), filteredgron);
 //		Core.inRange(hsv, new Scalar(25, 32, 0), new Scalar(97, 255, 255), filteredgron);
 //		Core.inRange(hsv, new Scalar(71, 105,138), new Scalar(117, 255, 255), filteredfront); 
-		Core.inRange(hsv, new Scalar(77, 194,51), new Scalar(129, 255, 255), filteredfront);
+		Core.inRange(hsv, new Scalar(89, 224,64), new Scalar(255, 255, 255), filteredfront);
 //		Core.inRange(hsv, new Scalar(101, 103, 165), new Scalar(199, 239, 235), filteredlilla);
 //		Core.inRange(hsv, new Scalar(27,134,169), new Scalar(255,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(162,21,81), new Scalar(251,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(0,61,62), new Scalar(251,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(0, 23, 93), new Scalar(34, 255, 255), filteredback);
 //		Core.inRange(hsv, new Scalar(0, 0, 85), new Scalar(36, 255, 255), filteredback);
-		Core.inRange(hsv, new Scalar(0, 0, 81), new Scalar(23, 255, 255), filteredback);
+		Core.inRange(hsv, new Scalar(0, 0, 86), new Scalar(25, 255, 255), filteredback);
 		
 //		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
 

@@ -3,10 +3,17 @@ package boldogrobot;
 public class Placeable {
 	double x;
 	double y;
+	String type;
 
 	public Placeable(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public Placeable(double x, double y, String type) {
+		this.x = x;
+		this.y = y;
+		this.type = type;
 	}
 	
 	public Placeable() {
@@ -35,6 +42,14 @@ public class Placeable {
 
 	public void setY(double y) {
 		this.y = y;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	
