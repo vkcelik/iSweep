@@ -200,6 +200,9 @@ public class WallFinder4 {
 //		Imgproc.drawContours(src, big, -1, new Scalar(0, 213, 16), 2);
 		
 		Highgui.imwrite(outFileName+".jpg", src);
+		src.release();
+		srcH.release();
+		hsv.release();
 		return list; 
 	}
 	

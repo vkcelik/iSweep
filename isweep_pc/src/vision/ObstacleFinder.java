@@ -102,6 +102,10 @@ public class ObstacleFinder {
         Imgproc.drawContours(srcH, contours, innerContour, new Scalar(0, 255, 255), 2);
 		
 		Highgui.imwrite("obstaclecontours.jpg", srcH);
+		src.release();
+		srcH.release();
+		filtered.release();
+		hsv.release();
 		return new Placeable(rrect.center.x, rrect.center.y);
 	}
 

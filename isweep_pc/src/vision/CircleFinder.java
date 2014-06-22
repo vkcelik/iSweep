@@ -57,7 +57,9 @@ public class CircleFinder {
 //		Core.inRange(hsv, new Scalar(0, 0, 182), new Scalar(255,108,255), filtered);
 
 //		Core.inRange(hsv, new Scalar(0, 0, 210), new Scalar(255,255,255), filtered);
-		Core.inRange(hsv, new Scalar(0, 0, 81), new Scalar(255,233,255), filtered);
+//		Core.inRange(hsv, new Scalar(0, 0, 81), new Scalar(255,233,255), filtered);
+		Core.inRange(hsv, new Scalar(25, 0, 56), new Scalar(67,255,255), filtered);
+		Imgproc.dilate(filtered, filtered, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(6,6)));
 		
 		Highgui.imwrite("filter.jpg",filtered);
 
@@ -121,7 +123,7 @@ public class CircleFinder {
 			contour = contours.get(i);
 			contourArea = Imgproc.contourArea(contour);
 			System.out.print("area: "+contourArea);
-//			if (contourArea > 600 && contourArea < 720){
+//			if (contourArea > 60 && contourArea < 720){
 			if (contourArea > 200 && contourArea < 500){
 				System.out.print(" OK");
 				Rect rect = Imgproc.boundingRect(contour);
@@ -141,7 +143,15 @@ public class CircleFinder {
 		}
 
 		Highgui.imwrite("out.jpg", src);
-
+		src.release();
+		src_gray.release();
+		smooth.release();
+		circles.release();
+		gray.release();
+		imageBlurr.release();
+		imageA.release();
+		hsv.release();
+		
 		return list;
 	}
 

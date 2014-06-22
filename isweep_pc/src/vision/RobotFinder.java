@@ -73,7 +73,8 @@ public class RobotFinder {
 //		Core.inRange(hsv, new Scalar(162,21,81), new Scalar(251,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(0,61,62), new Scalar(251,255,255), filteredlilla);
 //		Core.inRange(hsv, new Scalar(0, 23, 93), new Scalar(34, 255, 255), filteredback);
-		Core.inRange(hsv, new Scalar(0, 0, 85), new Scalar(36, 255, 255), filteredback);
+//		Core.inRange(hsv, new Scalar(0, 0, 85), new Scalar(36, 255, 255), filteredback);
+		Core.inRange(hsv, new Scalar(0, 0, 81), new Scalar(23, 255, 255), filteredback);
 		
 //		Imgproc.GaussianBlur(filteredlilla, filteredlilla, new Size(27,27), 4, 4);
 
@@ -82,6 +83,8 @@ public class RobotFinder {
 		List<MatOfPoint> contoursgron = new ArrayList<MatOfPoint>();
 		List<MatOfPoint> contourslilla = new ArrayList<MatOfPoint>();
 		
+		Imgproc.dilate(filteredfront, filteredfront, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(3,3)));
+		Imgproc.dilate(filteredback, filteredback, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(3,3)));
 		
 		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7,7));
 		Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7,7));
@@ -124,7 +127,7 @@ public class RobotFinder {
 		for(int i=0; i< contoursgron.size(); i++){
 			System.out.println("B: "+Imgproc.contourArea(contoursgron.get(i)));
 			
-			if(Imgproc.contourArea(contoursgron.get(i))>170 && Imgproc.contourArea(contoursgron.get(i))< 900){
+			if(Imgproc.contourArea(contoursgron.get(i))>130 && Imgproc.contourArea(contoursgron.get(i))< 900){
 				System.out.println("Found 1 BACK");
 				Rect rect = Imgproc.boundingRect(contoursgron.get(i));
 				list.add(new Placeable(rect.x+rect.width/2, rect.y+rect.height/2));
@@ -136,8 +139,17 @@ public class RobotFinder {
 		
 		
 		
-		
 		Highgui.imwrite("robot.jpg", src);	
+		src.release();
+		
+		src_gray.release();
+		smooth.release();
+		circles_g.release();
+		circles_l.release();
+		filteredfront.release();
+		filteredback.release();
+		hsv.release();
+		
 		return list;
 	}
 	

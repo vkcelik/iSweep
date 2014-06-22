@@ -77,9 +77,11 @@ public class CopyOfMain {
 	static Placeable ball = null;
 	static Placeable target = null;
 	
+	static Placeable lookAt = null;
+	
+	static boolean emptied = false;
+	
 	public static void main(String[] args) {
-		m.armCollect();
-		m.armHold();
 		System.loadLibrary("opencv_java248"); // loading the dll file from the native library location
 		vc =  new VideoCapture(0);
 		if(vc.isOpened()){
@@ -165,6 +167,15 @@ public class CopyOfMain {
 		System.out.println(avgMmPerPx);
 		System.out.println(avgPxPerMm);
 		
+		gotoXY(findGoalTarget());
+		turnAvoid(lookAt);
+		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+		m.turn(10);
+		try {Thread.sleep(1000);} catch (InterruptedException e) { e.printStackTrace();}
+		m.armThrow();
+		try {Thread.sleep(3000);} catch (InterruptedException e) { e.printStackTrace();}
+		m.armHold();
+		
 		obstacleCenter = of.run();
 		
 		findAndUpdateRobot();
@@ -175,6 +186,8 @@ public class CopyOfMain {
 			e.printStackTrace();
 		}
 		
+		int number_of_balls = balls.size();
+		int balls_left = number_of_balls;
 		System.out.println(balls.size());
 		
 		objects = new ArrayList<Placeable>();
@@ -184,51 +197,67 @@ public class CopyOfMain {
 		System.out.println("objects size: " +objects.size());
 		System.out.println("balls size: " +balls.size());
 		
-		// Ikke længere nødvendigt her. Pathfinder konstruerer matrixen
-//		double[][] adjacency = new double[objects.size()][objects.size()];
-		
-//		System.out.println(objects.get(0).getDistance(objects.get(1)));
-		
-//		for(int a = 0; a<objects.size();a++){
-//			for(int b = 0; b<objects.size();b++){
-//				adjacency[b][a]=objects.get(b).getDistance(objects.get(a));
-//			}
-//		}
-		
-		
-//		System.out.println();
-//		for(int a = 0; a<objects.size();a++){
-//			for(int b = 0; b<objects.size();b++){
-//				System.out.print(adjacency[b][a]+"\t");
-//			}
-//			System.out.println();
-//		}
 		
 		// KØR HAMILTON PATH PROGRAM (PATHFINDER)
 		
 		rute = pf.getShortestPath(objects);
-
-		ball = rute.get(0);
-//		ball = new Placeable(0, 0);
-//		findAndUpdateRobot();
-		align();
-		if (goToOtherSide){
-			Vector2D RT = new Vector2D(target.getX()-robot.getX(), target.getY()-robot.getY());
-			double RT_length = RT.getLength();
-			Vector2D rt_unit_v = new Vector2D(RT.getX()/RT_length, RT.getY()/RT_length);
-			double extend_length =  convert.mmToPixel(20);
-			double extend_factor = (RT_length+extend_length)/RT_length;
-			Vector2D extendedVector = new Vector2D(rt_unit_v.getX()*extend_factor, rt_unit_v.getY()*extend_factor);
-			Placeable otherSide = new Placeable(robot.getX()+extendedVector.getX(), robot.getY()+extendedVector.getY());
-			
-		}
-		gotoXY();
-		turn();
-//		findAndUpdateRobot();
-//		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+		
+		findGoalTarget();
+		
 		m.armCollect();
 		m.armHold();
-		
+
+		for(int i=0;i<rute.size();i++){
+			ball = rute.get(i);
+			//		findAndUpdateRobot();
+			align();
+			System.out.println(goToOtherSide);
+			if (goToOtherSide){
+				Vector2D RT = new Vector2D(target.getX()-robot.getX(), target.getY()-robot.getY());
+				double RT_length = RT.getLength();
+				Vector2D rt_unit_v = new Vector2D(RT.getX()/RT_length, RT.getY()/RT_length);
+				double extend_length =  convert.mmToPixel(20);
+				double extend_factor = (RT_length+extend_length)/RT_length;
+				Vector2D extendedVector = new Vector2D(rt_unit_v.getX()*extend_factor, rt_unit_v.getY()*extend_factor);
+				Placeable otherSide = new Placeable(robot.getX()+extendedVector.getX(), robot.getY()+extendedVector.getY());
+				gotoXY();
+			} else {
+				gotoXY();
+			}
+			turn();
+			//		findAndUpdateRobot();
+			//		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+			m.armCollect();
+			m.armHold();
+			try {
+				balls = cf.run();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			balls_left = balls.size();
+			if(balls_left == 0){
+				gotoXY(findGoalTarget());
+				turnAvoid(lookAt);
+				try {Thread.sleep(1000);} catch (InterruptedException e) { e.printStackTrace();}
+				m.turn(10);
+				try {Thread.sleep(1000);} catch (InterruptedException e) { e.printStackTrace();}
+				m.armThrow();
+				try {Thread.sleep(3000);} catch (InterruptedException e) { e.printStackTrace();}
+				m.armHold();
+			} else if(number_of_balls - balls_left % 2 == 0 && emptied == false){
+				gotoXY(findGoalTarget());
+				turnAvoid(lookAt);
+				m.turn(10);
+				try {Thread.sleep(1000);} catch (InterruptedException e) { e.printStackTrace();}
+				m.armThrow();
+				try {Thread.sleep(3000);} catch (InterruptedException e) { e.printStackTrace();}
+				m.armHold();
+				emptied = true;
+			} else {
+				emptied = false;
+			}
+		}
 		
 //		turn();
 //		findAndUpdateRobot();
@@ -244,102 +273,111 @@ public class CopyOfMain {
 		
 //		findAndUpdateRobot();
 		
-		ball=rute.get(1);
-		
-		findAndUpdateRobot();
-		align();
-		gotoXY();
-		turn();
-		m.armCollect();
-		m.armHold();
-//		turn();
-//		findAndUpdateRobot();
-//		drive();
-//
-//		findAndUpdateRobot();
-		
-		ball=rute.get(2);
-		
-		findAndUpdateRobot();
-		align();
-		gotoXY();
-		turn();
-		m.armCollect();
-		m.armHold();
-//		turn();
-//		findAndUpdateRobot();
-//		drive();
 //		
-//		
-//		findAndUpdateRobot();
-		
-		ball=rute.get(3);
-		
-		findAndUpdateRobot();
-		align();
-		gotoXY();
-		turn();
-		m.armCollect();
-		m.armHold();
-		
-		// TAKE PICTURE
-		// Find koordinaterne pï¿½ hvor vï¿½gene mï¿½des (inderside).
-		// Find lï¿½ngderne pï¿½ vï¿½gene i pixels 
-		// For hver vï¿½g: divider lï¿½ngden i pixels med hvor langt de er i virkeligheden og omvendt
-		// Find gennemsnittet af de 2 talsï¿½t
-		
-//		
-//		Ball ball = new Ball(2100, 100);
-//		Robot robot = new Robot(100, 100);
-//		robot.setBack(new Placeable(0, 100));
-//		robot.updateDirection();
-//		
-//		Direction robotBallVector = new Direction(ball.getX() - robot.getX(), ball.getY() - robot.getY());
-//		
-//		double robote0 = robot.getDirection().getElement(0);
-//		double robote1 = robot.getDirection().getElement(1);
-//		double toBalle0 = robotBallVector.getElement(0);
-//		double toBalle1 = robotBallVector.getElement(1);
-//		
-//		double vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
-//				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
-//						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
-//
-//		double vinkel_grader = Math.toDegrees(Math.acos(vinkel));
-//		
-//		m = new Movement();
-//		convert = new Converter(0.4,2.5);
-
-//		if(robot.getX()>ball.getX()){
-//			m.turnLeft((vinkel_grader);			
+//		ball = rute.get(1);
+////		ball = new Placeable(0, 0);
+////		findAndUpdateRobot();
+//		align();
+//		System.out.println(goToOtherSide);
+//		if (goToOtherSide){
+//			Vector2D RT = new Vector2D(target.getX()-robot.getX(), target.getY()-robot.getY());
+//			double RT_length = RT.getLength();
+//			Vector2D rt_unit_v = new Vector2D(RT.getX()/RT_length, RT.getY()/RT_length);
+//			double extend_length =  convert.mmToPixel(20);
+//			double extend_factor = (RT_length+extend_length)/RT_length;
+//			Vector2D extendedVector = new Vector2D(rt_unit_v.getX()*extend_factor, rt_unit_v.getY()*extend_factor);
+//			Placeable otherSide = new Placeable(robot.getX()+extendedVector.getX(), robot.getY()+extendedVector.getY());
+//			gotoXY();
 //		} else {
-//			m.turnRight(vinkel_grader);j
+//			gotoXY();
 //		}
-
-//		System.out.println(vinkel_grader);
-
-		// TAKE PICTURE
-		// Robot front og bagende(mï¿½ske) har nu ï¿½ndret position fordi vi har drejet
-		
-//		robot.setX(100);
-//		robot.setY(100);
-//		robot.setBack(new Placeable(0, 100));
-//		robot.updateDirection();
+//		turn();
+////		findAndUpdateRobot();
+////		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+//		m.armCollect();
+//		m.armHold();
 //		
 //		
-//		double distance_mm = convert.pixelToMm((robot.getDistance(ball), 1000);
-//		System.out.println(distance_mm);
-//		followLine(distance_mm);
+//		ball=rute.get(1);
+//		findAndUpdateRobot();
+//		align();
+//		gotoXY();
+//		turn();
+//		m.armCollect();
+//		m.armHold();
+//
 //		
+//		
+//		//		turn();
+////		findAndUpdateRobot();
+////		drive();
+////
+////		findAndUpdateRobot();
+//		
+//		ball=rute.get(2);
+//		
+//		findAndUpdateRobot();
+//		align();
+//		gotoXY();
+//		turn();
+//		m.armCollect();
+//		m.armHold();
+////		turn();
+////		findAndUpdateRobot();
+////		drive();
+////		
+////		
+////		findAndUpdateRobot();
+//		
+//		ball=rute.get(3);
+//		
+//		findAndUpdateRobot();
+//		align();
+//		gotoXY();
+//		turn();
 //		m.armCollect();
 //		m.armHold();
 		
-		//		ImageAnalyzer ia = new ImageAnalyzer();
-		//		ia.setImage(frame);
-		//		ia.getBalls();
+
 	}
 	
 	static void turn(){
+		findAndUpdateRobot();
+		robotBallVector = new Direction(target.getX() - robot.getX(), target.getY() - robot.getY());
+		
+		robote0 = robot.getDirection().getElement(0);
+		System.out.println("robote0: " + robote0);
+		robote1 = robot.getDirection().getElement(1);
+		System.out.println("robote1: " + robote1);
+		toBalle0 = robotBallVector.getElement(0);
+		System.out.println("toBalle0: " + toBalle0);
+		toBalle1 = robotBallVector.getElement(1);
+		System.out.println("toBalle1: " + toBalle1);
+		
+//		vinkel = ( robote0* toBalle0 + robote1 * toBalle1)
+//				/ ((Math.sqrt(Math.pow(robote0, 2) + (Math.pow(robote1, 2))) * (Math
+//						.sqrt(Math.pow(toBalle0, 2) + (Math.pow(toBalle1, 2))))));
+//
+//		vinkel_grader = Math.toDegrees(Math.acos(vinkel));
+		
+//		Udregning af vinkel
+		double signed_angle = Math.atan2(robote0,robote1) - Math.atan2(toBalle0,toBalle1);
+//		laver vinkel fra radianer til grader
+		double vinkel_grader = Math.toDegrees(signed_angle);
+//		vinkel_grader = vinkel_grader * 0.95;
+		
+		if(vinkel_grader > 180){
+			vinkel_grader = 360-vinkel_grader;
+		} else if (vinkel_grader < -180){
+			vinkel_grader = vinkel_grader + 360;
+		}
+//		try {Thread.sleep(2000);} catch (InterruptedException e) { e.printStackTrace();}
+		m.turn(vinkel_grader);
+
+		System.out.println(vinkel_grader+" grader");
+	}
+	
+	static void turnAvoid(Placeable target){
 		findAndUpdateRobot();
 		robotBallVector = new Direction(target.getX() - robot.getX(), target.getY() - robot.getY());
 		
@@ -403,13 +441,63 @@ public class CopyOfMain {
 	
 	
 	static void gotoXY(){
+		while (true){
+//			m.stop();
+			findAndUpdateRobot();
+			System.out.println("inside gotoXY");
+			// Check om forhindring ligger på ruten
+			Vector2D RT = new Vector2D(target.getX()-robot.getX(), target.getY()-robot.getY());
+			System.out.println("RT: "+RT);
+			// Find afstand fra vektor til forhindring
+			double dy = target.getY()-robot.getY();
+			System.out.println("dy: "+dy);
+			double dx = target.getX()-robot.getX();
+			System.out.println("dx: "+dx);
+			double d = Math.abs(dy*obstacleCenter.getX()-dx*obstacleCenter.getY()-robot.getX()*target.getY()+target.getX()*robot.getY())/Math.sqrt(Math.pow(dx, 2)+Math.pow(dy, 2));
+			System.out.println("d: "+d);
+			if (d < convert.mmToPixel(200)){
+				Vector2D vinkelvenstre = new Vector2D(RT.getY(), -1*RT.getX());
+				Vector2D vinkelhoejre = new Vector2D(-1*RT.getY(), RT.getX());
+				double laengde = vinkelvenstre.getLength();
+				Vector2D venstreUnit = new Vector2D(vinkelvenstre.getX()/laengde, vinkelvenstre.getY()/laengde);
+				Vector2D hoejreUnit = new Vector2D(vinkelhoejre.getX()/laengde, vinkelhoejre.getY()/laengde);
+				double rPlusA_pixel =  convert.mmToPixel(300);
+				Vector2D hoejreKorrekt = new Vector2D(hoejreUnit.getX()*rPlusA_pixel, hoejreUnit.getY()*rPlusA_pixel);
+				Vector2D venstreKorrekt = new Vector2D(venstreUnit.getX()*rPlusA_pixel, venstreUnit.getY()*rPlusA_pixel);
+				Placeable venstreOm = new Placeable(obstacleCenter.getX()+venstreKorrekt.getX(), obstacleCenter.getY()+venstreKorrekt.getY());
+				Placeable hoejreOm = new Placeable(obstacleCenter.getX()+hoejreKorrekt.getX(), obstacleCenter.getY()+hoejreKorrekt.getY());
+				if (robot.getDistance(venstreOm) > robot.getDistance(venstreOm)){
+					System.out.println("GOING TO HOEJRE: " + hoejreOm);
+					gotoXY(hoejreOm);
+				} else {
+					System.out.println("GOING TO VENSTRE: " + venstreOm);
+					gotoXY(venstreOm);
+				}
+			}
+			align();
+			turn();
+			findAndUpdateRobot();
+			
+		
+			distance_mm = convert.pixelToMm(robot.getDistance(target));
+			System.out.println("distance to target: " +distance_mm);
+			if (distance_mm <= 80){
+				m.moveBlocking(distance_mm);
+				break;
+			} else {
+				m.moveBlocking(80);
+			}
+		}
+	}		
+	
+	static void gotoXY(Placeable target){
 //		double initial_distance = robot.getDistance(target);
 //		double distance_left = robot.getDistance(target);
 		while (true){
-			m.stop();
+//			m.stop();
 			findAndUpdateRobot();
-			align();
-			turn();
+//			align();
+			turnAvoid(target);
 			findAndUpdateRobot();
 			distance_mm = convert.pixelToMm(robot.getDistance(target));
 			System.out.println("distance to target: " +distance_mm);
@@ -422,39 +510,28 @@ public class CopyOfMain {
 			}
 //			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
 		}
-		
-//		try {Thread.sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
-//		m.stop();
-//		findAndUpdateRobot();
-//		turn();
-//		findAndUpdateRobot();
-//		distance_mm = convert.pixelToMm(robot.getDistance(ball));
-//		m.move(distance_mm);
-//		
-//		try {Thread.sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
-//		m.stop();
-//		findAndUpdateRobot();
-//		turn();
-//		findAndUpdateRobot();
-//		distance_mm = convert.pixelToMm(robot.getDistance(ball));
-//		m.move(distance_mm);
-//		
-//		
-//		while (!haveArrived){
-//			distance_mm = convert.pixelToMm(robot.getDistance(ball));
-//			
-//			m.stop();
-//			findAndUpdateRobot();
-//			turn();
-//			findAndUpdateRobot();
-//			distance_mm = convert.pixelToMm(robot.getDistance(ball));
-//			m.move(distance_mm);
-//			if (distance_mm <= 2){
-//				m.stop();
-//				haveArrived = true;
-//			}
-//		}
-	}		
+	}
+	
+	static Placeable findGoalTarget(){
+		Vector2D side = new Vector2D(corners.get(1).getX()-corners.get(3).getX(), corners.get(1).getY()-corners.get(3).getY());
+		double sideLength = side.getLength();
+		System.out.println(sideLength);
+		double goalpost = convert.mmToPixel(560);
+		double scale = goalpost/sideLength;
+		Vector2D goalVector =  new Vector2D(side.getX()*scale, side.getY()*scale);
+		Placeable post = new Placeable(corners.get(3).getX()+goalVector.getX(), corners.get(3).getY()+goalVector.getY());
+		System.out.println(post);
+		Vector2D vinkelret  = new Vector2D(side.getY(), side.getX()*-1);
+		double scale2 = convert.mmToPixel(305)/sideLength;
+		System.out.println(scale2);
+		Vector2D towardCenter =  new Vector2D(vinkelret.getX()*scale2, vinkelret.getY()*scale2);
+		System.out.println(towardCenter);
+		Placeable dropPoint = new Placeable(post.getX()+towardCenter.getX(), post.getY()+towardCenter.getY());
+		System.out.println(dropPoint);
+		lookAt =  new Placeable(post.getX()+towardCenter.getX()*2, post.getY()+towardCenter.getY()*2);
+		System.out.println(lookAt);
+		return dropPoint;
+	}
 	
 	static void align(){
 		Vector2D retning = new Vector2D(robot.getDirection().getElement(0),robot.getDirection().getElement(1));
@@ -482,12 +559,14 @@ public class CopyOfMain {
 		System.out.println(modRobot);
 		System.out.println(convert.pixelToMm(modRobot.getLength()));
 		Placeable maal = new Placeable(ballArm.getX()+modRobot.getX(), ballArm.getY()+modRobot.getY());
+		System.out.println(maal);
 		
+		System.out.println("target distance from obstacle center: "+convert.pixelToMm(obstacleCenter.getDistance(maal)));
 		if(convert.pixelToMm(obstacleCenter.getDistance(maal)) < 200){
+			System.out.println("target inside danger");
 			goToOtherSide = true;
 		}
 		
-		System.out.println(maal);
 		target = maal;
 //		target = new Placeable( 740, 548);
 		
